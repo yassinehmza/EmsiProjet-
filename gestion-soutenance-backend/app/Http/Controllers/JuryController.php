@@ -39,6 +39,23 @@ class JuryController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *   path="/api/admin/juries/{jury}",
+     *   tags={"Admin"},
+     *   summary="Afficher un jury",
+     *   security={{"sanctum":{}}},
+     *   @OA\Parameter(name="jury", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\Response(response=200, description="Détails du jury")
+     * )
+     */
+    public function show(Request $request, Jury $jury)
+    {
+        $this->ensureAdmin($request);
+        $jury->load(['president:id,nom,prenom','rapporteur:id,nom,prenom','encadrant:id,nom,prenom','examinateur:id,nom,prenom']);
+        return response()->json(['jury' => $jury]);
+    }
+
+    /**
      * @OA\Post(
      *   path="/api/admin/juries",
      *   tags={"Admin"},
@@ -104,6 +121,23 @@ class JuryController extends Controller
      * )
      */
     public function destroy(Request $request, Jury $jury)
+    {
+        $this->ensureAdmin($request);
+        $jury->delete();
+        return response()->json([], 204);
+    }
+
+    /**
+     * @OA\Put(
+     *   path="/api/admin/juries/{jury}/annuler",
+     *   tags={"Admin"},
+     *   summary="Annuler (supprimer) un jury",
+     *   security={{"sanctum":{}}},
+     *   @OA\Parameter(name="jury", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\Response(response=204, description="Annulé")
+     * )
+     */
+    public function cancel(Request $request, Jury $jury)
     {
         $this->ensureAdmin($request);
         $jury->delete();

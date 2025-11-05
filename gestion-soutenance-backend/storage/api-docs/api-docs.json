@@ -432,6 +432,38 @@
                 ]
             }
         },
+        "/api/etudiants/{etudiant}/soutenance": {
+            "get": {
+                "tags": [
+                    "Soutenances"
+                ],
+                "summary": "Afficher la soutenance d'un étudiant",
+                "operationId": "4e9c98de804cc320cd99d191f5223d4e",
+                "parameters": [
+                    {
+                        "name": "etudiant",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de la soutenance"
+                    },
+                    "404": {
+                        "description": "Aucune soutenance"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/admin/juries": {
             "get": {
                 "tags": [
@@ -484,6 +516,33 @@
             }
         },
         "/api/admin/juries/{jury}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Afficher un jury",
+                "operationId": "4ee0db45f0de80ffeef22398fb654d7e",
+                "parameters": [
+                    {
+                        "name": "jury",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails du jury"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Admin"
@@ -539,6 +598,35 @@
                 ]
             }
         },
+        "/api/admin/juries/{jury}/annuler": {
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Annuler (supprimer) un jury",
+                "operationId": "fc6b29d748795494d13f8dce2922c791",
+                "parameters": [
+                    {
+                        "name": "jury",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Annulé"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/professeurs/{professeur}/rapports": {
             "get": {
                 "tags": [
@@ -559,6 +647,35 @@
                 "responses": {
                     "200": {
                         "description": "Liste des rapports"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/professeurs/{professeur}/soutenances": {
+            "get": {
+                "tags": [
+                    "Soutenances"
+                ],
+                "summary": "Lister les soutenances où le professeur est membre du jury",
+                "operationId": "668b42ce9155b1d27a62316f3a89aac7",
+                "parameters": [
+                    {
+                        "name": "professeur",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des soutenances"
                     }
                 },
                 "security": [
@@ -647,8 +764,61 @@
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Lister les soutenances",
+                "summary": "Lister les soutenances (filtres + pagination)",
                 "operationId": "633dad0d19aa2bae61af959c5f87364b",
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "salle",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "jury_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "etudiant_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Liste des soutenances"
@@ -694,6 +864,33 @@
             }
         },
         "/api/admin/soutenances/{soutenance}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Afficher une soutenance",
+                "operationId": "cdadd25a293941cc8fb36684d246bc47",
+                "parameters": [
+                    {
+                        "name": "soutenance",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de la soutenance"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Admin"
@@ -713,6 +910,33 @@
                 "responses": {
                     "200": {
                         "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Annuler une soutenance",
+                "operationId": "8ed5d102440291b1ea86f177230df544",
+                "parameters": [
+                    {
+                        "name": "soutenance",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Annulée"
                     }
                 },
                 "security": [
@@ -762,6 +986,35 @@
                     }
                 ]
             }
+        },
+        "/api/admin/soutenances/{soutenance}/annuler": {
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Annuler une soutenance (alias)",
+                "operationId": "1837fbfec45cfab7e8bf132e4aab741b",
+                "parameters": [
+                    {
+                        "name": "soutenance",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Annulée"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -786,6 +1039,10 @@
         {
             "name": "Rapports",
             "description": "Rapports"
+        },
+        {
+            "name": "Soutenances",
+            "description": "Soutenances"
         },
         {
             "name": "Remarques",

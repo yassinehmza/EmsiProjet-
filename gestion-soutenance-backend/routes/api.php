@@ -7,8 +7,10 @@ use App\Http\Controllers\EtudiantRapportController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RemarqueController;
 use App\Http\Controllers\ProfesseurRapportController;
+use App\Http\Controllers\ProfesseurSoutenanceController;
 use App\Http\Controllers\JuryController;
 use App\Http\Controllers\SoutenanceController;
+use App\Http\Controllers\EtudiantSoutenanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,8 @@ Route::post('/auth/admin/login', [AuthController::class, 'loginAdministrateur'])
 // Rapports étudiants (dépôt + liste)
 Route::post('/etudiants/{etudiant}/rapports', [EtudiantRapportController::class, 'store']);
 Route::middleware('auth:sanctum')->get('/etudiants/{etudiant}/rapports', [EtudiantRapportController::class, 'index']);
+// Soutenance de l'étudiant (consultation)
+Route::middleware('auth:sanctum')->get('/etudiants/{etudiant}/soutenance', [EtudiantSoutenanceController::class, 'show']);
 
 // --- Routes protégées Admin ---
 Route::middleware('auth:sanctum')->group(function () {
@@ -49,16 +53,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rapports visibles par un professeur (étudiants assignés)
     Route::get('/professeurs/{professeur}/rapports', [ProfesseurRapportController::class, 'index']);
+    // Soutenances où le professeur est membre du jury
+    Route::get('/professeurs/{professeur}/soutenances', [ProfesseurSoutenanceController::class, 'index']);
 
     // Gestion Juries (Admin)
     Route::get('/admin/juries', [JuryController::class, 'index']);
+    Route::get('/admin/juries/{jury}', [JuryController::class, 'show']);
     Route::post('/admin/juries', [JuryController::class, 'store']);
     Route::put('/admin/juries/{jury}', [JuryController::class, 'update']);
     Route::delete('/admin/juries/{jury}', [JuryController::class, 'destroy']);
+    Route::put('/admin/juries/{jury}/annuler', [JuryController::class, 'cancel']);
 
     // Planification Soutenances (Admin)
     Route::get('/admin/soutenances', [SoutenanceController::class, 'index']);
+    Route::get('/admin/soutenances/{soutenance}', [SoutenanceController::class, 'show']);
     Route::post('/admin/soutenances', [SoutenanceController::class, 'store']);
     Route::put('/admin/soutenances/{soutenance}', [SoutenanceController::class, 'update']);
+    Route::delete('/admin/soutenances/{soutenance}', [SoutenanceController::class, 'destroy']);
     Route::put('/admin/soutenances/{soutenance}/note', [SoutenanceController::class, 'updateNote']);
+    Route::put('/admin/soutenances/{soutenance}/annuler', [SoutenanceController::class, 'cancel']);
 });
