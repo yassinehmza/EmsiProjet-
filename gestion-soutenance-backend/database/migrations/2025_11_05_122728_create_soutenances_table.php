@@ -18,8 +18,8 @@ return new class extends Migration
         $table->string('salle');
         $table->float('note_finale')->nullable();
         $table->foreignId('etudiant_id')->constrained('etudiants')->onDelete('cascade');
-        // Le jury est facultatif au moment de la planification ; si supprimé, mettre la valeur à NULL
-        $table->foreignId('jury_id')->nullable()->constrained('juries')->nullOnDelete();
+        // Le jury est facultatif au moment de la planification ; conserver une clé nullable sans contrainte FK pour éviter l'ordre de migration.
+        $table->unsignedBigInteger('jury_id')->nullable();
         $table->timestamps();
         });
     }

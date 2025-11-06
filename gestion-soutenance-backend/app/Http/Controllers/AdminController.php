@@ -55,7 +55,10 @@ class AdminController extends Controller
             'type_stage' => $data['type_stage'],
         ]);
 
-        return response()->json(['etudiant' => $etudiant], 201);
+        return response()->json([
+            'message' => 'Étudiant créé avec succès',
+            'etudiant' => $etudiant
+        ], 201);
     }
 
     /**
@@ -65,6 +68,17 @@ class AdminController extends Controller
      *   summary="Mettre à jour un étudiant",
      *   security={{"sanctum":{}}},
      *   @OA\Parameter(name="etudiant", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\RequestBody(
+     *     required=false,
+     *     @OA\JsonContent(
+     *       @OA\Property(property="nom", type="string"),
+     *       @OA\Property(property="prenom", type="string"),
+     *       @OA\Property(property="email", type="string", format="email"),
+     *       @OA\Property(property="mot_de_passe", type="string"),
+     *       @OA\Property(property="filiere", type="string"),
+     *       @OA\Property(property="type_stage", type="string")
+     *     )
+     *   ),
      *   @OA\Response(response=200, description="OK")
      * )
      */
@@ -85,7 +99,10 @@ class AdminController extends Controller
         }
 
         $etudiant->update($data);
-        return response()->json(['etudiant' => $etudiant]);
+        return response()->json([
+            'message' => 'Étudiant mis à jour avec succès',
+            'etudiant' => $etudiant
+        ]);
     }
 
     /**
@@ -102,7 +119,7 @@ class AdminController extends Controller
     {
         $this->ensureAdmin($request);
         $etudiant->delete();
-        return response()->json([], 204);
+        return response()->json(['message' => 'Étudiant supprimé avec succès'], 200);
     }
 
     /**
@@ -128,7 +145,10 @@ class AdminController extends Controller
         ]);
 
         $etudiant->update($data);
-        return response()->json(['etudiant' => $etudiant]);
+        return response()->json([
+            'message' => 'Affectations mises à jour avec succès',
+            'etudiant' => $etudiant
+        ]);
     }
 
     // --- Professeurs ---
@@ -138,6 +158,17 @@ class AdminController extends Controller
      *   tags={"Admin"},
      *   summary="Créer un professeur",
      *   security={{"sanctum":{}}},
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\JsonContent(
+     *       required={"nom","prenom","email","mot_de_passe"},
+     *       @OA\Property(property="nom", type="string"),
+     *       @OA\Property(property="prenom", type="string"),
+     *       @OA\Property(property="email", type="string", format="email"),
+     *       @OA\Property(property="mot_de_passe", type="string", minLength=6),
+     *       @OA\Property(property="role_soutenance", type="string", nullable=true)
+     *     )
+     *   ),
      *   @OA\Response(response=201, description="Professeur créé")
      * )
      */
@@ -160,7 +191,10 @@ class AdminController extends Controller
             'role_soutenance' => $data['role_soutenance'] ?? null,
         ]);
 
-        return response()->json(['professeur' => $prof], 201);
+        return response()->json([
+            'message' => 'Professeur créé avec succès',
+            'professeur' => $prof
+        ], 201);
     }
 
     /**
@@ -170,6 +204,16 @@ class AdminController extends Controller
      *   summary="Mettre à jour un professeur",
      *   security={{"sanctum":{}}},
      *   @OA\Parameter(name="professeur", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\RequestBody(
+     *     required=false,
+     *     @OA\JsonContent(
+     *       @OA\Property(property="nom", type="string"),
+     *       @OA\Property(property="prenom", type="string"),
+     *       @OA\Property(property="email", type="string", format="email"),
+     *       @OA\Property(property="mot_de_passe", type="string", minLength=6),
+     *       @OA\Property(property="role_soutenance", type="string", nullable=true)
+     *     )
+     *   ),
      *   @OA\Response(response=200, description="OK")
      * )
      */
@@ -189,7 +233,10 @@ class AdminController extends Controller
         }
 
         $professeur->update($data);
-        return response()->json(['professeur' => $professeur]);
+        return response()->json([
+            'message' => 'Professeur mis à jour avec succès',
+            'professeur' => $professeur
+        ]);
     }
 
     /**
@@ -206,6 +253,6 @@ class AdminController extends Controller
     {
         $this->ensureAdmin($request);
         $professeur->delete();
-        return response()->json([], 204);
+        return response()->json(['message' => 'Professeur supprimé avec succès'], 200);
     }
 }

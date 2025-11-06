@@ -80,7 +80,10 @@ class JuryController extends Controller
             return response()->json(['message' => 'Les membres du jury doivent être distincts'], 422);
         }
         $jury = Jury::create($data);
-        return response()->json(['jury' => $jury], 201);
+        return response()->json([
+            'message' => 'Jury créé avec succès',
+            'jury' => $jury
+        ], 201);
     }
 
     /**

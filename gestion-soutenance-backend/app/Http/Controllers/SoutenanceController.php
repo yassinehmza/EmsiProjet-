@@ -128,7 +128,10 @@ class SoutenanceController extends Controller
         }
 
         $soutenance = Soutenance::create($data);
-        return response()->json(['soutenance' => $soutenance], 201);
+        return response()->json([
+            'message' => 'Soutenance planifiée avec succès',
+            'soutenance' => $soutenance
+        ], 201);
     }
 
     /**
