@@ -18,22 +18,7 @@ class AdminController extends Controller
         }
     }
 
-    // --- Étudiants ---
-    /**
-     * @OA\Post(
-     *   path="/api/admin/etudiants",
-     *   tags={"Admin"},
-     *   summary="Créer un étudiant",
-     *   security={{"sanctum":{}}},
-     *   @OA\RequestBody(
-     *     required=true,
-     *     @OA\JsonContent(
-     *       required={"nom","prenom","email","mot_de_passe","filiere","type_stage"}
-     *     )
-     *   ),
-     *   @OA\Response(response=201, description="Étudiant créé")
-     * )
-     */
+    
     public function createEtudiant(Request $request)
     {
         $this->ensureAdmin($request);
@@ -61,27 +46,7 @@ class AdminController extends Controller
         ], 201);
     }
 
-    /**
-     * @OA\Put(
-     *   path="/api/admin/etudiants/{etudiant}",
-     *   tags={"Admin"},
-     *   summary="Mettre à jour un étudiant",
-     *   security={{"sanctum":{}}},
-     *   @OA\Parameter(name="etudiant", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\RequestBody(
-     *     required=false,
-     *     @OA\JsonContent(
-     *       @OA\Property(property="nom", type="string"),
-     *       @OA\Property(property="prenom", type="string"),
-     *       @OA\Property(property="email", type="string", format="email"),
-     *       @OA\Property(property="mot_de_passe", type="string"),
-     *       @OA\Property(property="filiere", type="string"),
-     *       @OA\Property(property="type_stage", type="string")
-     *     )
-     *   ),
-     *   @OA\Response(response=200, description="OK")
-     * )
-     */
+    
     public function updateEtudiant(Request $request, Etudiant $etudiant)
     {
         $this->ensureAdmin($request);
@@ -105,16 +70,7 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Delete(
-     *   path="/api/admin/etudiants/{etudiant}",
-     *   tags={"Admin"},
-     *   summary="Supprimer un étudiant",
-     *   security={{"sanctum":{}}},
-     *   @OA\Parameter(name="etudiant", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\Response(response=204, description="Supprimé")
-     * )
-     */
+    
     public function deleteEtudiant(Request $request, Etudiant $etudiant)
     {
         $this->ensureAdmin($request);
@@ -122,20 +78,7 @@ class AdminController extends Controller
         return response()->json(['message' => 'Étudiant supprimé avec succès'], 200);
     }
 
-    /**
-     * @OA\Put(
-     *   path="/api/admin/etudiants/{etudiant}/affectations",
-     *   tags={"Admin"},
-     *   summary="Affecter encadrant/rapporteur",
-     *   security={{"sanctum":{}}},
-     *   @OA\Parameter(name="etudiant", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\RequestBody(@OA\JsonContent(
-     *       @OA\Property(property="encadrant_id", type="integer", nullable=true),
-     *       @OA\Property(property="rapporteur_id", type="integer", nullable=true)
-     *   )),
-     *   @OA\Response(response=200, description="OK")
-     * )
-     */
+    
     public function assignEtudiantRoles(Request $request, Etudiant $etudiant)
     {
         $this->ensureAdmin($request);
@@ -151,27 +94,7 @@ class AdminController extends Controller
         ]);
     }
 
-    // --- Professeurs ---
-    /**
-     * @OA\Post(
-     *   path="/api/admin/professeurs",
-     *   tags={"Admin"},
-     *   summary="Créer un professeur",
-     *   security={{"sanctum":{}}},
-     *   @OA\RequestBody(
-     *     required=true,
-     *     @OA\JsonContent(
-     *       required={"nom","prenom","email","mot_de_passe"},
-     *       @OA\Property(property="nom", type="string"),
-     *       @OA\Property(property="prenom", type="string"),
-     *       @OA\Property(property="email", type="string", format="email"),
-     *       @OA\Property(property="mot_de_passe", type="string", minLength=6),
-     *       @OA\Property(property="role_soutenance", type="string", nullable=true)
-     *     )
-     *   ),
-     *   @OA\Response(response=201, description="Professeur créé")
-     * )
-     */
+   
     public function createProfesseur(Request $request)
     {
         $this->ensureAdmin($request);
@@ -197,26 +120,7 @@ class AdminController extends Controller
         ], 201);
     }
 
-    /**
-     * @OA\Put(
-     *   path="/api/admin/professeurs/{professeur}",
-     *   tags={"Admin"},
-     *   summary="Mettre à jour un professeur",
-     *   security={{"sanctum":{}}},
-     *   @OA\Parameter(name="professeur", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\RequestBody(
-     *     required=false,
-     *     @OA\JsonContent(
-     *       @OA\Property(property="nom", type="string"),
-     *       @OA\Property(property="prenom", type="string"),
-     *       @OA\Property(property="email", type="string", format="email"),
-     *       @OA\Property(property="mot_de_passe", type="string", minLength=6),
-     *       @OA\Property(property="role_soutenance", type="string", nullable=true)
-     *     )
-     *   ),
-     *   @OA\Response(response=200, description="OK")
-     * )
-     */
+    
     public function updateProfesseur(Request $request, Professeur $professeur)
     {
         $this->ensureAdmin($request);
@@ -239,16 +143,7 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Delete(
-     *   path="/api/admin/professeurs/{professeur}",
-     *   tags={"Admin"},
-     *   summary="Supprimer un professeur",
-     *   security={{"sanctum":{}}},
-     *   @OA\Parameter(name="professeur", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\Response(response=204, description="Supprimé")
-     * )
-     */
+
     public function deleteProfesseur(Request $request, Professeur $professeur)
     {
         $this->ensureAdmin($request);

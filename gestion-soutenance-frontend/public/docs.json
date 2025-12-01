@@ -1,0 +1,1149 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Gestion des Soutenances",
+        "description": "Documentation OpenAPI pour le backend Laravel",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Serveur local"
+        }
+    ],
+    "paths": {
+        "/api/admin/etudiants": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Créer un étudiant",
+                "operationId": "37fc052773dec1eca97dbc3dcd5f5632",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nom",
+                                    "prenom",
+                                    "email",
+                                    "mot_de_passe",
+                                    "filiere",
+                                    "type_stage"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Étudiant créé"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/etudiants/{etudiant}": {
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Mettre à jour un étudiant",
+                "operationId": "4d151a44819abf3afb1a1974bad4609e",
+                "parameters": [
+                    {
+                        "name": "etudiant",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "prenom": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "mot_de_passe": {
+                                        "type": "string"
+                                    },
+                                    "filiere": {
+                                        "type": "string"
+                                    },
+                                    "type_stage": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Supprimer un étudiant",
+                "operationId": "1d5f4c3f66e30726d68fe646c958369b",
+                "parameters": [
+                    {
+                        "name": "etudiant",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Supprimé"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/etudiants/{etudiant}/affectations": {
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Affecter encadrant/rapporteur",
+                "operationId": "f1e24967c13080d0651b0333d5b99026",
+                "parameters": [
+                    {
+                        "name": "etudiant",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "encadrant_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "rapporteur_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/professeurs": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Créer un professeur",
+                "operationId": "cf1e2c50cb63465e820288676b2ddcf8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nom",
+                                    "prenom",
+                                    "email",
+                                    "mot_de_passe"
+                                ],
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "prenom": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "mot_de_passe": {
+                                        "type": "string",
+                                        "minLength": 6
+                                    },
+                                    "role_soutenance": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Professeur créé"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/professeurs/{professeur}": {
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Mettre à jour un professeur",
+                "operationId": "1634138ac10fda83bf891647626ec898",
+                "parameters": [
+                    {
+                        "name": "professeur",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "prenom": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "mot_de_passe": {
+                                        "type": "string",
+                                        "minLength": 6
+                                    },
+                                    "role_soutenance": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Supprimer un professeur",
+                "operationId": "ec02677e5ec717ba072a6bce027fa0e9",
+                "parameters": [
+                    {
+                        "name": "professeur",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Supprimé"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/etudiant/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Connexion étudiant",
+                "operationId": "a1bfb91c38b30135d1cf57cd68589f48",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token et profil"
+                    },
+                    "401": {
+                        "description": "Identifiants invalides"
+                    }
+                }
+            }
+        },
+        "/api/auth/professeur/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Connexion professeur",
+                "operationId": "5c060268c7ada069362ce915778226f6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token et profil"
+                    },
+                    "401": {
+                        "description": "Identifiants invalides"
+                    }
+                }
+            }
+        },
+        "/api/auth/admin/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Connexion administrateur",
+                "operationId": "574417459337e78a0e6bec1a1dfe23a6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token et profil"
+                    },
+                    "401": {
+                        "description": "Identifiants invalides"
+                    }
+                }
+            }
+        },
+        "/api/etudiants/{etudiant}/rapports": {
+            "get": {
+                "tags": [
+                    "Rapports"
+                ],
+                "summary": "Lister les rapports d'un étudiant",
+                "operationId": "2d4c92b838a7c9aac0b5fab03389d10a",
+                "parameters": [
+                    {
+                        "name": "etudiant",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des rapports"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Rapports"
+                ],
+                "summary": "Dépôt de rapport par étudiant",
+                "operationId": "cb9062e939a8e3cb86bdb1a2f7afa71f",
+                "parameters": [
+                    {
+                        "name": "etudiant",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "titre",
+                                    "date_depot"
+                                ],
+                                "properties": {
+                                    "titre": {
+                                        "type": "string"
+                                    },
+                                    "date_depot": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "commentaire": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Rapport créé"
+                    },
+                    "400": {
+                        "description": "Validation échouée"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/etudiants/{etudiant}/soutenance": {
+            "get": {
+                "tags": [
+                    "Soutenances"
+                ],
+                "summary": "Afficher la soutenance d'un étudiant",
+                "operationId": "4e9c98de804cc320cd99d191f5223d4e",
+                "parameters": [
+                    {
+                        "name": "etudiant",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de la soutenance"
+                    },
+                    "404": {
+                        "description": "Aucune soutenance"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/juries": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Lister les juries",
+                "operationId": "742f25f4fe4d930e29cc345de477347e",
+                "responses": {
+                    "200": {
+                        "description": "Liste des juries"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Créer un jury",
+                "operationId": "a82970fa5418f991fc2b0e697cf4cdf6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "president_id",
+                                    "rapporteur_id",
+                                    "encadrant_id",
+                                    "examinateur_id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Jury créé"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/juries/{jury}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Afficher un jury",
+                "operationId": "4ee0db45f0de80ffeef22398fb654d7e",
+                "parameters": [
+                    {
+                        "name": "jury",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails du jury"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Mettre à jour un jury",
+                "operationId": "6eade27ab0d6a937d07b83fb5d86ef63",
+                "parameters": [
+                    {
+                        "name": "jury",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Supprimer un jury",
+                "operationId": "ba624e52e82d529369f939cb85fce50e",
+                "parameters": [
+                    {
+                        "name": "jury",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Supprimé"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/juries/{jury}/annuler": {
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Annuler (supprimer) un jury",
+                "operationId": "fc6b29d748795494d13f8dce2922c791",
+                "parameters": [
+                    {
+                        "name": "jury",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Annulé"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/professeurs/{professeur}/rapports": {
+            "get": {
+                "tags": [
+                    "Rapports"
+                ],
+                "summary": "Lister les rapports des étudiants assignés (encadrant ou rapporteur)",
+                "operationId": "4582b2a5de7d8fce29925a058ca522e0",
+                "parameters": [
+                    {
+                        "name": "professeur",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des rapports"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/professeurs/{professeur}/soutenances": {
+            "get": {
+                "tags": [
+                    "Soutenances"
+                ],
+                "summary": "Lister les soutenances où le professeur est membre du jury",
+                "operationId": "668b42ce9155b1d27a62316f3a89aac7",
+                "parameters": [
+                    {
+                        "name": "professeur",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des soutenances"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/rapports/{rapport}/remarques": {
+            "get": {
+                "tags": [
+                    "Remarques"
+                ],
+                "summary": "Lister les remarques d'un rapport",
+                "operationId": "c01bb2d432ca27b16b1b280f67ba3c03",
+                "parameters": [
+                    {
+                        "name": "rapport",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des remarques"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Remarques"
+                ],
+                "summary": "Ajouter une remarque sur un rapport",
+                "operationId": "0e71d10818c2da41f78f3259acf7b910",
+                "parameters": [
+                    {
+                        "name": "rapport",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "contenu"
+                                ],
+                                "properties": {
+                                    "contenu": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Remarque créée"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/soutenances": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Lister les soutenances (filtres + pagination)",
+                "operationId": "633dad0d19aa2bae61af959c5f87364b",
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "salle",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "jury_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "etudiant_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des soutenances"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Planifier une soutenance",
+                "operationId": "f1c43100c52b779df850cb757bb56d18",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "date",
+                                    "heure",
+                                    "salle",
+                                    "etudiant_id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Soutenance créée"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/soutenances/{soutenance}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Afficher une soutenance",
+                "operationId": "cdadd25a293941cc8fb36684d246bc47",
+                "parameters": [
+                    {
+                        "name": "soutenance",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de la soutenance"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Mettre à jour une soutenance",
+                "operationId": "a0694f3f508d04e1fdc8cb136de39928",
+                "parameters": [
+                    {
+                        "name": "soutenance",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Annuler une soutenance",
+                "operationId": "8ed5d102440291b1ea86f177230df544",
+                "parameters": [
+                    {
+                        "name": "soutenance",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Annulée"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/soutenances/{soutenance}/note": {
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Mettre à jour la note finale",
+                "operationId": "95d4e3e32e14bd6e61c1c59f91b90529",
+                "parameters": [
+                    {
+                        "name": "soutenance",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "note_finale"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/soutenances/{soutenance}/annuler": {
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Annuler une soutenance (alias)",
+                "operationId": "1837fbfec45cfab7e8bf132e4aab741b",
+                "parameters": [
+                    {
+                        "name": "soutenance",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Annulée"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Saisir uniquement le jeton d'accès",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Admin",
+            "description": "Admin"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Rapports",
+            "description": "Rapports"
+        },
+        {
+            "name": "Soutenances",
+            "description": "Soutenances"
+        },
+        {
+            "name": "Remarques",
+            "description": "Remarques"
+        }
+    ]
+}

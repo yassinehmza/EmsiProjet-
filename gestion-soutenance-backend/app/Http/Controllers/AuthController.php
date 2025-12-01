@@ -11,23 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    /**
-     * @OA\Post(
-     *   path="/api/auth/etudiant/login",
-     *   tags={"Auth"},
-     *   summary="Connexion étudiant",
-     *   @OA\RequestBody(
-     *     required=true,
-     *     @OA\JsonContent(
-     *       required={"email","password"},
-     *       @OA\Property(property="email", type="string", format="email"),
-     *       @OA\Property(property="password", type="string")
-     *     )
-     *   ),
-     *   @OA\Response(response=200, description="Token et profil"),
-     *   @OA\Response(response=401, description="Identifiants invalides")
-     * )
-     */
+    
     public function loginEtudiant(Request $request)
     {
         $data = $request->validate([
