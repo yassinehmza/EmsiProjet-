@@ -9,6 +9,8 @@ import Etudiants from './Admin/Etudiants';
 import Professeurs from './Admin/Professeurs';
 import Soutenances from './Admin/Soutenances';
 import Juries from './Admin/Juries';
+import ProfesseurDashboard from './pages/ProfesseurDashboard';
+import EtudiantDashboard from './pages/EtudiantDashboard';
 
 function App() {
   return (
@@ -16,6 +18,28 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        
+        {/* Route Professeur */}
+        <Route
+          path="/professeur"
+          element={
+            <ProtectedRoute allowRole="professeur">
+              <ProfesseurDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Route Étudiant */}
+        <Route
+          path="/etudiant"
+          element={
+            <ProtectedRoute allowRole="etudiant">
+              <EtudiantDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Routes Admin */}
         <Route
           path="/admin"
           element={
@@ -30,9 +54,8 @@ function App() {
           <Route path="professeurs" element={<div className="text-gray-700"><Professeurs /></div>} />
           <Route path="soutenances" element={<div className="text-gray-700"><Soutenances /></div>} />
           <Route path="juries" element={<div className="text-gray-700"><Juries /></div>} />
-          <Route path="afietations" element={<div className="text-gray-700">Afiétations — à implémenter</div>} />
           <Route path="affectations" element={<div className="text-gray-700">Affectations — à implémenter</div>} />
-          <Route path="planifiction" element={<div className="text-gray-700">Planifiction — à implémenter</div>} />
+          <Route path="planification" element={<div className="text-gray-700">Planification — à implémenter</div>} />
         </Route>
       </Routes>
     </BrowserRouter>

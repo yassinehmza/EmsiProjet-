@@ -100,3 +100,14 @@ export const listRapportsByEtudiant_2d4c92b838a7c9aac0b5fab03389d10a = async (et
   const { data } = await client.get(`/etudiants/${etudiantId}/rapports`);
   return data;
 };
+
+// Fonctions pour lister les étudiants et professeurs
+export const adminListEtudiants = async () => {
+  const { data } = await client.get('/admin/etudiants');
+  return data;
+};
+
+export const adminListProfesseurs = async () => {
+  const { data } = await client.get('/admin/professeurs');
+  return data;
+};

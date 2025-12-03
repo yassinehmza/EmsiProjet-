@@ -94,10 +94,18 @@ export default function Juries() {
           )}
           {items.map(item => (
             <tr key={item.id} className="hover:bg-emerald-50/50">
-              <td className="px-4 py-2">{item.president_id}</td>
-              <td className="px-4 py-2">{item.rapporteur_id}</td>
-              <td className="px-4 py-2">{item.encadrant_id}</td>
-              <td className="px-4 py-2">{item.examinateur_id}</td>
+              <td className="px-4 py-2">
+                {item.president ? `${item.president.nom} ${item.president.prenom}` : `ID ${item.president_id}`}
+              </td>
+              <td className="px-4 py-2">
+                {item.rapporteur ? `${item.rapporteur.nom} ${item.rapporteur.prenom}` : `ID ${item.rapporteur_id}`}
+              </td>
+              <td className="px-4 py-2">
+                {item.encadrant ? `${item.encadrant.nom} ${item.encadrant.prenom}` : `ID ${item.encadrant_id}`}
+              </td>
+              <td className="px-4 py-2">
+                {item.examinateur ? `${item.examinateur.nom} ${item.examinateur.prenom}` : `ID ${item.examinateur_id}`}
+              </td>
               <td className="px-4 py-2">
                 <div className="flex gap-2">
                   <Button variant="secondary" onClick={() => openEdit(item)} className="px-3 py-1">Modifier</Button>

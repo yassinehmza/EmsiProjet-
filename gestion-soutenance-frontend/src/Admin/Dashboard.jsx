@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { adminListJuries_742f25f4fe4d930e29cc345de477347e } from '../api/admin';
+import { adminListJuries_742f25f4fe4d930e29cc345de477347e, adminListEtudiants, adminListProfesseurs } from '../api/admin';
 import Card from '../components/Card';
 import Table from '../components/Table';
 import Button from '../components/Button';
@@ -7,6 +7,8 @@ import { useUI } from '../store/ui';
 
 export default function Dashboard() {
   const [juries, setJuries] = useState([]);
+  const [etudiants, setEtudiants] = useState([]);
+  const [professeurs, setProfesseurs] = useState([]);
   const [loading, setLoading] = useState(false);
   const { addToast } = useUI();
 
@@ -14,10 +16,16 @@ export default function Dashboard() {
     const run = async () => {
       setLoading(true);
       try {
-        const jRes = await adminListJuries_742f25f4fe4d930e29cc345de477347e();
-        const jList = jRes?.data || jRes;
-        setJuries(Array.isArray(jList) ? jList : []);
-      } catch {
+        const [jRes, eRes, pRes] = await Promise.all([
+          adminListJuries_742f25f4fe4d930e29cc345de477347e(),
+          adminListEtudiants(),
+          adminListProfesseurs()
+        ]);
+        setJuries(Array.isArray(jRes?.data || jRes) ? (jRes?.data || jRes) : []);
+        setEtudiants(Array.isArray(eRes?.data || eRes) ? (eRes?.data || eRes) : []);
+        setProfesseurs(Array.isArray(pRes?.data || pRes) ? (pRes?.data || pRes) : []);
+      } catch (err) {
+        console.error('Erreur chargement dashboard:', err);
         addToast({ type:'error', message:'Erreur de chargement du dashboard' });
       } finally {
         setLoading(false);
@@ -27,22 +35,13 @@ export default function Dashboard() {
   }, [addToast]);
 
   const metrics = useMemo(() => ([
-    { icon: HeartIcon(), value: 124, label: 'Étudiants Inscrits' },
-    { icon: UserIcon(), value: 45, label: 'Professeurs' },
-    { icon: HeartIcon(), value: 89, label: 'Affectations Complètes' },
-    { icon: HeartIcon(), value: juries.length || 23, label: 'Juris Formés' },
-  ]), [juries.length]);
+    { icon: HeartIcon(), value: etudiants.length, label: 'Étudiants Inscrits' },
+    { icon: UserIcon(), value: professeurs.length, label: 'Professeurs' },
+    { icon: HeartIcon(), value: 0, label: 'Affectations Complètes' },
+    { icon: HeartIcon(), value: juries.length, label: 'Jurys Formés' },
+  ]), [etudiants.length, professeurs.length, juries.length]);
 
-  const students = useMemo(() => {
-    const prenoms = ['Adam','Sara','Youssef','Mariam','Amine','Fatima','Omar','Nadia','Rachid','Imane','Hassan','Salma'];
-    return prenoms.map((p, i) => ({
-      nom: 'Q. Demi',
-      prenom: p,
-      email: `etudiant${i+1}@exemple.com`,
-      filiere: ['Système','Réseau','Cloud','DevOps','IA'][i%5],
-      type: ['Juryté','PFE','Stage','Alternance'][i%4],
-    }));
-  }, []);
+  const students = useMemo(() => etudiants.slice(0, 10), [etudiants]);
 
   return (
     <div className="space-y-6">
@@ -69,17 +68,31 @@ export default function Dashboard() {
 
       <Card title="Liste des étudiants" actions={<Button variant="secondary">Exporter</Button>}>
         <Table headers={["Nom","Prénom","Email","Filière","Type Stage","Action"]}>
-          {students.map((s, i) => (
-            <tr key={i} className="hover:bg-emerald-50/50">
+          {loading && (
+            <tr>
+              <td colSpan="6" className="px-4 py-6 text-center text-gray-500">
+                Chargement...
+              </td>
+            </tr>
+          )}
+          {!loading && students.length === 0 && (
+            <tr>
+              <td colSpan="6" className="px-4 py-6 text-center text-gray-500">
+                Aucun étudiant trouvé
+              </td>
+            </tr>
+          )}
+          {!loading && students.map((s, i) => (
+            <tr key={s.id || i} className="hover:bg-emerald-50/50">
               <td className="px-4 py-2">{s.nom}</td>
               <td className="px-4 py-2">{s.prenom}</td>
               <td className="px-4 py-2">{s.email}</td>
               <td className="px-4 py-2">{s.filiere}</td>
               <td className="px-4 py-2">
-                <span className="inline-flex items-center rounded-full bg-[#008D36] text-white px-3 py-1 text-xs">{s.type}</span>
+                <span className="inline-flex items-center rounded-full bg-[#008D36] text-white px-3 py-1 text-xs">{s.type_stage}</span>
               </td>
               <td className="px-4 py-2">
-                <Button variant="secondary" className="px-3 py-1 text-sm">Action</Button>
+                <Button variant="secondary" className="px-3 py-1 text-sm">Voir</Button>
               </td>
             </tr>
           ))}

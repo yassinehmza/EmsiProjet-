@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { adminListSoutenances_633dad0d19aa2bae61af959c5f87364b, adminPlanifierSoutenance_f1c43100c52b779df850cb757bb56d18 } from '../api/admin';
+import { useEffect, useState, useMemo } from 'react';
+import { adminListSoutenances_633dad0d19aa2bae61af959c5f87364b, adminPlanifierSoutenance_f1c43100c52b779df850cb757bb56d18, adminListEtudiants } from '../api/admin';
 import Breadcrumbs from '../components/Breadcrumbs';
 import Button from '../components/Button';
 import Card from '../components/Card';
@@ -8,10 +8,12 @@ import { useUI } from '../store/ui';
 export default function Soutenances() {
   const [calDate, setCalDate] = useState(new Date());
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [etudiants, setEtudiants] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [salle, setSalle] = useState('');
-  const [etudiantId, setEtudiantId] = useState('');
+  const [selectedEtudiant, setSelectedEtudiant] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
   const [slots, setSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -20,17 +22,37 @@ export default function Soutenances() {
 
   useEffect(() => {
     const run = async () => {
-      setLoading(true);
       try {
-        const res = await adminListSoutenances_633dad0d19aa2bae61af959c5f87364b({ per_page: 500 });
-        const list = res?.data || res?.items || res;
+        const [soutRes, etudRes] = await Promise.all([
+          adminListSoutenances_633dad0d19aa2bae61af959c5f87364b({ per_page: 500 }),
+          adminListEtudiants()
+        ]);
+        const list = soutRes?.data || soutRes?.items || soutRes;
         setItems(Array.isArray(list) ? list : []);
-      } finally {
-        setLoading(false);
+        const etList = etudRes?.data || etudRes;
+        setEtudiants(Array.isArray(etList) ? etList : []);
+      } catch (err) {
+        console.error('Erreur chargement données:', err);
       }
     };
     run();
   }, [calDate]);
+
+  // Étudiants disponibles (pas encore de soutenance)
+  const availableEtudiants = useMemo(() => {
+    const assignedIds = new Set(items.map(s => s.etudiant_id));
+    return etudiants.filter(e => !assignedIds.has(e.id));
+  }, [etudiants, items]);
+
+  // Filtrer étudiants par recherche
+  const filteredEtudiants = useMemo(() => {
+    if (!searchTerm.trim()) return availableEtudiants;
+    const term = searchTerm.toLowerCase();
+    return availableEtudiants.filter(e => 
+      `${e.nom} ${e.prenom}`.toLowerCase().includes(term) ||
+      e.email?.toLowerCase().includes(term)
+    );
+  }, [availableEtudiants, searchTerm]);
 
   useEffect(() => {
     const toMin = (t) => {
@@ -56,7 +78,7 @@ export default function Soutenances() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedDate || !selectedSlot || !salle || !etudiantId) return;
+    if (!selectedDate || !selectedSlot || !salle || !selectedEtudiant) return;
     setSubmitting(true);
     try {
       const heure = selectedSlot.slice(0,5);
@@ -64,10 +86,18 @@ export default function Soutenances() {
         date: selectedDate,
         heure,
         salle,
-        etudiant_id: Number(etudiantId),
+        etudiant_id: selectedEtudiant.id,
       });
-      addToast({ type:'success', message:'Soutenance planifiée' });
+      addToast({ type:'success', message:`Soutenance planifiée pour ${selectedEtudiant.nom} ${selectedEtudiant.prenom}` });
+      // Recharger les données
+      const res = await adminListSoutenances_633dad0d19aa2bae61af959c5f87364b({ per_page: 500 });
+      const list = res?.data || res?.items || res;
+      setItems(Array.isArray(list) ? list : []);
+      // Reset form
+      setSelectedEtudiant(null);
+      setSearchTerm('');
       setSelectedSlot('');
+      setSalle('');
     } catch (err) {
       const msg = (err?.response?.data?.message) || (err?.response?.data?.error) || 'Validation échouée';
       addToast({ type:'error', message: msg });
@@ -108,7 +138,7 @@ export default function Soutenances() {
     past: toKey(d) < todayIso,
   }));
   const eventsByDate = items.reduce((acc, it) => {
-    const k = it.date || '';
+    const k = (it.date || '').substring(0, 10); // Extract YYYY-MM-DD from ISO timestamp
     if (!k) return acc;
     acc[k] = acc[k] || [];
     acc[k].push(it);
@@ -124,7 +154,8 @@ export default function Soutenances() {
         <h2 className="text-xl font-semibold text-emerald-700">Planifier une soutenance</h2>
       </div>
       
-      <Card title="Calendrier">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <Card title="Calendrier" className={selectedDate ? 'lg:col-span-2' : 'lg:col-span-3'}>
         <div className="flex items-center justify-between mb-3">
           <div className="text-sm text-gray-700">{calDate.toLocaleString(undefined, { month:'long', year:'numeric' })}</div>
           <div className="flex items-center gap-2">
@@ -154,12 +185,12 @@ export default function Soutenances() {
                     {listMode ? (
                       <div className="space-y-0.5">
                         <div className="font-medium text-[#05A66B]">{ev.heure || '—'}</div>
-                        <div>Étudiant {ev.etudiant_id || '—'}</div>
+                        <div>{ev.etudiant ? `${ev.etudiant.nom} ${ev.etudiant.prenom}` : `Étudiant ${ev.etudiant_id || '—'}`}</div>
                         <div>Salle {ev.salle || '—'}</div>
-                        <div>Jury {ev.jury_id || '—'}</div>
+                        <div>Jury #{ev.jury_id || '—'}</div>
                       </div>
                     ) : (
-                      <div className="truncate">{ev.heure} · {ev.salle || 'Salle'}</div>
+                      <div className="truncate">{ev.heure} · {ev.etudiant ? `${ev.etudiant.nom} ${ev.etudiant.prenom.charAt(0)}.` : `ID ${ev.etudiant_id}`}</div>
                     )}
                   </div>
                 ))}
@@ -176,38 +207,100 @@ export default function Soutenances() {
           <div className="flex items-center gap-2"><span className="inline-block w-3 h-3 rounded bg-gray-400"></span> Passé</div>
         </div>
       </Card>
+      
       {selectedDate && (
-        <Card title="Planification">
-          <div className="space-y-4">
-            <div className="text-sm text-gray-700">Date sélectionnée: <span className="font-medium text-[#05A66B]">{selectedDate}</span></div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <label className="flex flex-col gap-1">
-                <span className="text-sm text-gray-700">Étudiant ID</span>
-                <input className="border rounded px-3 py-2" value={etudiantId} onChange={e=>setEtudiantId(e.target.value)} />
-              </label>
-              <label className="flex flex-col gap-1">
-                <span className="text-sm text-gray-700">Salle</span>
-                <input className="border rounded px-3 py-2" value={salle} onChange={e=>setSalle(e.target.value)} />
-              </label>
-              <div className="flex items-end gap-2">
-                <Button variant="secondary" onClick={()=>{ setSelectedDate(''); setSelectedSlot(''); }}>Réinitialiser</Button>
+          <div className="lg:col-span-1 space-y-4">
+            <Card title={<div className="flex items-center justify-between"><span>📅 {selectedDate}</span><button onClick={()=>setSelectedDate('')} className="text-gray-400 hover:text-gray-600">✕</button></div>}>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-xs font-semibold text-gray-600 uppercase mb-2">Soutenances programmées</div>
+                  {(eventsByDate[selectedDate] || []).length === 0 ? (
+                    <div className="text-center py-4 text-sm text-gray-500 bg-gray-50 rounded">Aucune soutenance</div>
+                  ) : (
+                    <div className="space-y-2">
+                      {(eventsByDate[selectedDate] || []).map(ev => (
+                        <div key={ev.id} className="border-l-4 border-emerald-500 bg-emerald-50/50 p-3 rounded">
+                          <div className="font-bold text-emerald-700 text-lg">{ev.heure || '—'}</div>
+                          <div className="text-sm font-medium mt-1">{ev.etudiant ? `${ev.etudiant.nom} ${ev.etudiant.prenom}` : `ID ${ev.etudiant_id}`}</div>
+                          <div className="text-xs text-gray-600 mt-1">📍 {ev.salle || '—'}</div>
+                          {ev.note_finale && <div className="text-xs text-emerald-700 font-semibold mt-1">Note: {ev.note_finale}/20</div>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="border-t pt-4">
+                  <div className="text-xs font-semibold text-gray-600 uppercase mb-2">Planifier nouvelle soutenance</div>
+                  {availableEtudiants.length === 0 ? (
+                    <div className="text-center py-6 text-sm text-gray-500 bg-yellow-50 rounded border border-yellow-200">
+                      ⚠️ Tous les étudiants ont déjà une soutenance planifiée
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="relative">
+                        <label className="flex flex-col gap-1">
+                          <span className="text-xs text-gray-700">Étudiant ({availableEtudiants.length} disponible{availableEtudiants.length > 1 ? 's' : ''})</span>
+                          <input 
+                            className="border rounded px-2 py-1.5 text-sm" 
+                            value={selectedEtudiant ? `${selectedEtudiant.nom} ${selectedEtudiant.prenom}` : searchTerm}
+                            onChange={e => {
+                              setSearchTerm(e.target.value);
+                              setSelectedEtudiant(null);
+                              setShowDropdown(true);
+                            }}
+                            onFocus={() => setShowDropdown(true)}
+                            placeholder="🔍 Rechercher un étudiant..." 
+                          />
+                        </label>
+                        {showDropdown && !selectedEtudiant && (
+                          <div className="absolute z-10 w-full mt-1 bg-white border rounded shadow-lg max-h-48 overflow-y-auto">
+                            {filteredEtudiants.length === 0 ? (
+                              <div className="px-3 py-2 text-sm text-gray-500">Aucun étudiant trouvé</div>
+                            ) : (
+                              filteredEtudiants.map(e => (
+                                <div 
+                                  key={e.id} 
+                                  className="px-3 py-2 hover:bg-emerald-50 cursor-pointer border-b last:border-b-0"
+                                  onClick={() => {
+                                    setSelectedEtudiant(e);
+                                    setSearchTerm('');
+                                    setShowDropdown(false);
+                                  }}
+                                >
+                                  <div className="font-medium text-sm">{e.nom} {e.prenom}</div>
+                                  <div className="text-xs text-gray-500">{e.filiere} • {e.type_stage}</div>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <label className="flex flex-col gap-1">
+                        <span className="text-xs text-gray-700">Salle</span>
+                        <input className="border rounded px-2 py-1.5 text-sm" value={salle} onChange={e=>setSalle(e.target.value)} placeholder="Ex: Amphi A" />
+                      </label>
+                      <div>
+                        <div className="text-xs text-gray-700 mb-2">Créneaux disponibles</div>
+                        <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                          {slots.map(s => (
+                            <button key={s.time} disabled={!s.available} onClick={()=>setSelectedSlot(s.time)} className={`px-2 py-1.5 text-sm rounded border ${selectedSlot===s.time?'bg-[#05A66B] text-white border-[#05A66B]':''} ${s.available?'hover:border-[#05A66B] bg-white':'opacity-40 cursor-not-allowed bg-gray-100'}`}>
+                              {s.time}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <Button disabled={!selectedDate || !selectedSlot || !salle || !selectedEtudiant || submitting} onClick={onSubmit} className="w-full">
+                        {submitting ? 'En cours...' : '+ Planifier'}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-700 mb-2">Heures disponibles</div>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                {slots.map(s => (
-                  <button key={s.time} disabled={!s.available} onClick={()=>setSelectedSlot(s.time)} className={`px-3 py-2 rounded border ${selectedSlot===s.time?'bg-[#05A66B] text-white border-[#05A66B]':''} ${s.available?'hover:border-[#05A66B]':'opacity-50 cursor-not-allowed'}`}>{s.time}</button>
-                ))}
-              </div>
-            </div>
-            <div className="flex items-center justify-end gap-2">
-              <Button variant="secondary" onClick={()=>{ setSelectedDate(''); setSelectedSlot(''); }}>Annuler</Button>
-              <Button disabled={!selectedDate || !selectedSlot || !salle || !etudiantId || submitting} onClick={onSubmit}>Planifier</Button>
-            </div>
+            </Card>
           </div>
-        </Card>
       )}
+      </div>
     </div>
   );
 }

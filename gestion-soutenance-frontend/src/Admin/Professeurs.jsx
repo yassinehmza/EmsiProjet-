@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
+  adminListProfesseurs,
   adminCreateProfesseur_cf1e2c50cb63465e820288676b2ddcf8,
   adminUpdateProfesseur_1634138ac10fda83bf891647626ec898,
   adminDeleteProfesseur_ec02677e5ec717ba072a6bce027fa0e9,
@@ -79,6 +80,19 @@ export default function Professeurs() {
       setConfirm({ open:false, item:null });
     }
   };
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await adminListProfesseurs();
+        setItems(res?.data || res || []);
+      } catch (err) {
+        console.error('Erreur chargement professeurs:', err);
+        addToast({ type:'error', message:'Erreur de chargement des professeurs' });
+      }
+    };
+    load();
+  }, [addToast]);
 
   return (
     <div className="space-y-4">
