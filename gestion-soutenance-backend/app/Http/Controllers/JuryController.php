@@ -35,7 +35,7 @@ class JuryController extends Controller
     {
         $this->ensureAdmin($request);
         $juries = Jury::with(['president:id,nom,prenom','rapporteur:id,nom,prenom','encadrant:id,nom,prenom','examinateur:id,nom,prenom'])->orderByDesc('id')->get();
-        return response()->json(['juries' => $juries]);
+        return response()->json(['data' => $juries]);
     }
 
     /**

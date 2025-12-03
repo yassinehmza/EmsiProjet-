@@ -18,6 +18,25 @@ class AdminController extends Controller
         }
     }
 
+    // Liste tous les étudiants
+    public function listEtudiants(Request $request)
+    {
+        $this->ensureAdmin($request);
+        // Sélection avec relations encadrant et rapporteur
+        $etudiants = Etudiant::with(['encadrant:id,nom,prenom', 'rapporteur:id,nom,prenom'])
+            ->select('id', 'nom', 'prenom', 'email', 'filiere', 'type_stage', 'encadrant_id', 'rapporteur_id', 'created_at')
+            ->get();
+        return response()->json($etudiants);
+    }
+
+    // Liste tous les professeurs
+    public function listProfesseurs(Request $request)
+    {
+        $this->ensureAdmin($request);
+        // Sélection uniquement des colonnes nécessaires pour optimiser
+        $professeurs = Professeur::select('id', 'nom', 'prenom', 'email', 'role_soutenance', 'created_at')->get();
+        return response()->json($professeurs);
+    }
     
     public function createEtudiant(Request $request)
     {

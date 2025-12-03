@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Etudiant extends Model
 {
@@ -19,6 +20,8 @@ class Etudiant extends Model
         'mot_de_passe',
         'filiere',
         'type_stage',
+        'encadrant_id',
+        'rapporteur_id',
     ];
 
     protected $hidden = [
@@ -33,5 +36,15 @@ class Etudiant extends Model
     public function soutenance(): HasOne
     {
         return $this->hasOne(Soutenance::class);
+    }
+
+    public function encadrant(): BelongsTo
+    {
+        return $this->belongsTo(Professeur::class, 'encadrant_id');
+    }
+
+    public function rapporteur(): BelongsTo
+    {
+        return $this->belongsTo(Professeur::class, 'rapporteur_id');
     }
 }

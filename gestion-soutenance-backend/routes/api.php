@@ -23,6 +23,9 @@ use App\Http\Controllers\EtudiantSoutenanceController;
 |
 */
 
+// Status endpoint (public)
+Route::get('/status', [App\Http\Controllers\StatusController::class, 'check']);
+
 // Auth endpoints par rôle
 Route::post('/auth/etudiant/login', [AuthController::class, 'loginEtudiant']);
 Route::post('/auth/professeur/login', [AuthController::class, 'loginProfesseur']);
@@ -37,12 +40,14 @@ Route::middleware('auth:sanctum')->get('/etudiants/{etudiant}/soutenance', [Etud
 // --- Routes protégées Admin ---
 Route::middleware('auth:sanctum')->group(function () {
     // Étudiants
+    Route::get('/admin/etudiants', [AdminController::class, 'listEtudiants']);
     Route::post('/admin/etudiants', [AdminController::class, 'createEtudiant']);
     Route::put('/admin/etudiants/{etudiant}', [AdminController::class, 'updateEtudiant']);
     Route::delete('/admin/etudiants/{etudiant}', [AdminController::class, 'deleteEtudiant']);
     Route::put('/admin/etudiants/{etudiant}/affectations', [AdminController::class, 'assignEtudiantRoles']);
 
     // Professeurs
+    Route::get('/admin/professeurs', [AdminController::class, 'listProfesseurs']);
     Route::post('/admin/professeurs', [AdminController::class, 'createProfesseur']);
     Route::put('/admin/professeurs/{professeur}', [AdminController::class, 'updateProfesseur']);
     Route::delete('/admin/professeurs/{professeur}', [AdminController::class, 'deleteProfesseur']);

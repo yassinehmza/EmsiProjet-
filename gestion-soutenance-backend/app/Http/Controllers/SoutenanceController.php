@@ -54,7 +54,7 @@ class SoutenanceController extends Controller
         $paginator = $query->paginate($perPage, ['*'], 'page', $page);
 
         return response()->json([
-            'soutenances' => $paginator->items(),
+            'data' => $paginator->items(),
             'meta' => [
                 'current_page' => $paginator->currentPage(),
                 'per_page' => $paginator->perPage(),

@@ -12,6 +12,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Créer les comptes par défaut pour tester l'application
+        $this->call([
+            AdminSeeder::class,
+            ProfesseurSeeder::class,
+            EtudiantSeeder::class,
+        ]);
+        
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

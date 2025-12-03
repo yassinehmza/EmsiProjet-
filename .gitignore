@@ -1,0 +1,22 @@
+# Frontend
+gestion-soutenance-frontend/.env
+gestion-soutenance-frontend/node_modules/
+gestion-soutenance-frontend/package-lock.json
+gestion-soutenance-frontend/build/
+
+# Backend
+gestion-soutenance-backend/vendor/
+gestion-soutenance-backend/.env
+gestion-soutenance-backend/composer.lock
+gestion-soutenance-backend/storage/*.key
+gestion-soutenance-backend/storage/logs/*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

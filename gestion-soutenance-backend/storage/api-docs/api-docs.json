@@ -12,358 +12,6 @@
         }
     ],
     "paths": {
-        "/api/admin/etudiants": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Créer un étudiant",
-                "operationId": "37fc052773dec1eca97dbc3dcd5f5632",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "nom",
-                                    "prenom",
-                                    "email",
-                                    "mot_de_passe",
-                                    "filiere",
-                                    "type_stage"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Étudiant créé"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/etudiants/{etudiant}": {
-            "put": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Mettre à jour un étudiant",
-                "operationId": "4d151a44819abf3afb1a1974bad4609e",
-                "parameters": [
-                    {
-                        "name": "etudiant",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": false,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "nom": {
-                                        "type": "string"
-                                    },
-                                    "prenom": {
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "mot_de_passe": {
-                                        "type": "string"
-                                    },
-                                    "filiere": {
-                                        "type": "string"
-                                    },
-                                    "type_stage": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Supprimer un étudiant",
-                "operationId": "1d5f4c3f66e30726d68fe646c958369b",
-                "parameters": [
-                    {
-                        "name": "etudiant",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Supprimé"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/etudiants/{etudiant}/affectations": {
-            "put": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Affecter encadrant/rapporteur",
-                "operationId": "f1e24967c13080d0651b0333d5b99026",
-                "parameters": [
-                    {
-                        "name": "etudiant",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "encadrant_id": {
-                                        "type": "integer",
-                                        "nullable": true
-                                    },
-                                    "rapporteur_id": {
-                                        "type": "integer",
-                                        "nullable": true
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/professeurs": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Créer un professeur",
-                "operationId": "cf1e2c50cb63465e820288676b2ddcf8",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "nom",
-                                    "prenom",
-                                    "email",
-                                    "mot_de_passe"
-                                ],
-                                "properties": {
-                                    "nom": {
-                                        "type": "string"
-                                    },
-                                    "prenom": {
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "mot_de_passe": {
-                                        "type": "string",
-                                        "minLength": 6
-                                    },
-                                    "role_soutenance": {
-                                        "type": "string",
-                                        "nullable": true
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Professeur créé"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/professeurs/{professeur}": {
-            "put": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Mettre à jour un professeur",
-                "operationId": "1634138ac10fda83bf891647626ec898",
-                "parameters": [
-                    {
-                        "name": "professeur",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": false,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "nom": {
-                                        "type": "string"
-                                    },
-                                    "prenom": {
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "mot_de_passe": {
-                                        "type": "string",
-                                        "minLength": 6
-                                    },
-                                    "role_soutenance": {
-                                        "type": "string",
-                                        "nullable": true
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Supprimer un professeur",
-                "operationId": "ec02677e5ec717ba072a6bce027fa0e9",
-                "parameters": [
-                    {
-                        "name": "professeur",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Supprimé"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/auth/etudiant/login": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Connexion étudiant",
-                "operationId": "a1bfb91c38b30135d1cf57cd68589f48",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "password": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Token et profil"
-                    },
-                    "401": {
-                        "description": "Identifiants invalides"
-                    }
-                }
-            }
-        },
         "/api/auth/professeur/login": {
             "post": {
                 "tags": [
@@ -1112,6 +760,85 @@
                     }
                 ]
             }
+        },
+        "/api/status": {
+            "get": {
+                "tags": [
+                    "Status"
+                ],
+                "summary": "Vérifier le statut de l'API",
+                "description": "Vérifie que le serveur est en ligne et que la connexion à la base de données est établie",
+                "operationId": "8b3905eed10f76484591adcdf2592d3d",
+                "responses": {
+                    "200": {
+                        "description": "API et base de données fonctionnent correctement",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "API is running properly"
+                                        },
+                                        "server": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "database": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "database_name": {
+                                            "type": "string",
+                                            "example": "gestion_sout"
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "example": "2025-12-03 12:30:45"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur de connexion à la base de données",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Database connection failed"
+                                        },
+                                        "server": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "database": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -1126,10 +853,6 @@
     },
     "tags": [
         {
-            "name": "Admin",
-            "description": "Admin"
-        },
-        {
             "name": "Auth",
             "description": "Auth"
         },
@@ -1142,8 +865,16 @@
             "description": "Soutenances"
         },
         {
+            "name": "Admin",
+            "description": "Admin"
+        },
+        {
             "name": "Remarques",
             "description": "Remarques"
+        },
+        {
+            "name": "Status",
+            "description": "Status"
         }
     ]
 }
