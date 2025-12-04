@@ -5,6 +5,11 @@ import H1 from '../assets/H1.jpg';
 import H2 from '../assets/H2.jpg';
 import H3 from '../assets/H3.jpg';
 import H4 from '../assets/H4.jpg';
+import GC from '../assets/GC.png';
+import GE from '../assets/GE.png';
+import GEI from '../assets/GEI.PNG';
+import GF from '../assets/GF.png';
+import IIR from '../assets/IIR.png';
 
 function DocIcon() {
   return (
@@ -71,7 +76,7 @@ export default function Home() {
           <a href="/"><img src={Logo} alt="Logo" className="h-16 md:h-20 w-auto object-contain" /></a>
           <nav className="hidden md:flex justify-center items-center gap-10 text-gray-800">
             <a href="#apropos" className="px-2 hover:text-[#05A66B]">A propos</a>
-            <a href="#" className="px-2 hover:text-[#05A66B]">Formations</a>
+            <a href="#formations" className="px-2 hover:text-[#05A66B]">Formations</a>
             <a href="#" className="px-2 hover:text-[#05A66B]">Employabilité</a>
             <a href="#" className="px-2 hover:text-[#05A66B]">Recherche & innovation</a>
             <a href="#" className="px-2 hover:text-[#05A66B]">Vie estudiantine</a>
@@ -99,7 +104,7 @@ export default function Home() {
         <div className={`md:hidden ${mobileOpen?'block':'hidden'} border-t bg-white`}>
           <div className="max-w-6xl mx-auto px-4 py-3 space-y-2">
             <a href="#" className="block px-2 py-2 rounded hover:bg-gray-100">A propos</a>
-            <a href="#" className="block px-2 py-2 rounded hover:bg-gray-100">Formations</a>
+            <a href="#formations" className="block px-2 py-2 rounded hover:bg-gray-100">Formations</a>
             <a href="#" className="block px-2 py-2 rounded hover:bg-gray-100">Employabilité</a>
             <a href="#" className="block px-2 py-2 rounded hover:bg-gray-100">Recherche & innovation</a>
             <a href="#" className="block px-2 py-2 rounded hover:bg-gray-100">Vie estudiantine</a>
@@ -149,7 +154,141 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <section id="formations" className="py-12">
+          <div className="max-w-6xl mx-auto px-4">
+            <h2 className="text-center text-3xl md:text-4xl font-semibold text-gray-900">Nos Formation</h2>
+            <div className="h-1 w-16 bg-[#008D36] mx-auto rounded my-6"></div>
+            <div className="grid md:grid-cols-3 md:grid-rows-3 gap-6">
+              <div className="relative rounded-2xl overflow-hidden row-span-3 group">
+                <img src={GC} alt="Centres de carrières" className="w-full h-full max-h-[720px] object-cover transition-transform duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/85 transition-all duration-300" />
+                <div className="absolute bottom-4 left-4 right-4 text-white text-xl md:text-2xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Génie Civil, Bâtiments et Travaux Publics (BTP)</div>
+                
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <h3 className="text-white text-xl md:text-2xl font-bold mb-4 text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Génie Civil, Bâtiments et Travaux Publics (BTP)</h3>
+                  <p className="text-white text-center text-sm md:text-base leading-relaxed transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 delay-100">
+                    Formez-vous pour concevoir et réaliser des infrastructures durables et intelligentes. Cette filière vous prépare aux métiers du bâtiment, des travaux publics et des grands projets grâce à une maîtrise des techniques du génie civil, du BIM, de la modélisation 3D et de la gestion de chantier. Une formation orientée projets, chantiers-écoles et immersion professionnelle.
+                  </p>
+                </div>
+              </div>
+              <div className="relative rounded-2xl overflow-hidden group">
+                <img src={GEI} alt="Nos recruteurs" className="w-full h-48 md:h-56 object-cover transition-transform duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/90 transition-all duration-300" />
+                <div className="absolute bottom-4 left-4 right-4 text-white text-xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Génie Industriel</div>
+                
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <h3 className="text-white text-lg font-bold mb-2 text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Génie Industriel</h3>
+                  <p className="text-white text-center text-xs md:text-sm leading-relaxed transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 delay-100 line-clamp-6">
+                    Maîtrisez l’automatisation, le contrôle-commande et les systèmes industriels intelligents. Cette filière forme des ingénieurs capables de programmer des automates, concevoir des systèmes embarqués, intégrer l’IoT et superviser des installations connectées pour bâtir l’usine du futur.
+                  </p>
+                </div>
+              </div>
+              <div className="relative rounded-2xl overflow-hidden group">
+                <img src={GF} alt="Génie Financier" className="w-full h-48 md:h-56 object-cover transition-transform duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/90 transition-all duration-300" />
+                <div className="absolute bottom-4 left-4 right-4 text-white text-xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Génie Financier</div>
+                
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <h3 className="text-white text-lg font-bold mb-2 text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Génie Financier</h3>
+                  <p className="text-white text-center text-xs md:text-sm leading-relaxed transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 delay-100 line-clamp-6">
+                    La filière Génie Financier forme des ingénieurs capables d’analyser les données financières, anticiper les risques et piloter la performance économique des entreprises. Elle combine finance quantitative, stratégie, data science et outils numériques avancés (IA, blockchain).
+                  </p>
+                </div>
+              </div>
+              <div className="relative rounded-2xl overflow-hidden group">
+                <img src={GE} alt="Génie Électrique et Systèmes Intelligents" className="w-full h-48 md:h-56 object-cover transition-transform duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/90 transition-all duration-300" />
+                <div className="absolute bottom-4 left-4 right-4 text-white text-xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Génie Électrique et Systèmes Intelligents</div>
+                
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <h3 className="text-white text-lg font-bold mb-2 text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Génie Électrique et Systèmes Intelligents</h3>
+                  <p className="text-white text-center text-xs md:text-sm leading-relaxed transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 delay-100 line-clamp-6">
+                    La filière Génie Électrique & Systèmes Intelligents forme des ingénieurs capables de répondre aux enjeux de la transition énergétique et de l’industrie intelligente. Elle combine technologies électriques, automatisation, IA et systèmes connectés pour concevoir des solutions modernes, durables et performantes.
+                  </p>
+                </div>
+              </div>
+              <div className="relative rounded-2xl overflow-hidden row-span-3 group">
+                <img src={IIR} alt="Alumni" className="w-full h-full max-h-[720px] object-cover transition-transform duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/85 transition-all duration-300" />
+                <div className="absolute bottom-4 left-4 right-4 text-white text-xl md:text-2xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Ingénierie Informatique et Réseaux</div>
+                
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <h3 className="text-white text-xl md:text-2xl font-bold mb-4 text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Ingénierie Informatique et Réseaux</h3>
+                  <p className="text-white text-center text-sm md:text-base leading-relaxed transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 delay-100">
+                    Devenez un ingénieur du numérique capable de concevoir, sécuriser et déployer les technologies de demain. Cette filière forme des experts en développement logiciel, intelligence artificielle, cybersécurité, réseaux intelligents et cloud computing, grâce à une pédagogie orientée projets et compétences.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
+      <footer className="mt-12 bg-[#008D36] text-white rounded-t-3xl">
+        <div className="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-5 gap-8">
+          <div className="md:col-span-2 space-y-3">
+            <div className="flex items-center gap-3">
+              <img src={Logo} alt="EMSI" className="h-10 w-auto object-contain" />
+              <div className="text-sm">ECOLE MAROCAINE DES SCIENCES DE L'INGENIEUR</div>
+            </div>
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/10">Ecole Reconnue par l'Etat</div>
+            <p className="text-sm opacity-90">L’École Marocaine des Sciences de l’Ingénieur, créée il y a plus de 39 ans, est la plus grande école d’ingénieurs privée au Maroc. L’EMSI est reconnue par l’État, délivre une formation d’excellence en ingénierie et dispose de 19 campus à travers le Maroc, à Casablanca, Rabat, Marrakech, Fès et Tanger.</p>
+            <button className="px-4 py-2 rounded-lg bg-white text-[#008D36] font-medium">Télécharger la brochure</button>
+          </div>
+          <div>
+            <div className="font-semibold mb-3">EMSI</div>
+            <div className="space-y-2 text-sm opacity-90">
+              <a href="#" className="block hover:underline">Présentation</a>
+              <a href="#" className="block hover:underline">Réseau Honoris</a>
+              <a href="#" className="block hover:underline">Nos Actualités</a>
+              <a href="#" className="block hover:underline">Campus</a>
+            </div>
+          </div>
+          <div>
+            <div className="font-semibold mb-3">Employabilité</div>
+            <div className="space-y-2 text-sm opacity-90">
+              <a href="#" className="block hover:underline">Ressources Carrière</a>
+              <a href="#" className="block hover:underline">Centre de carrière</a>
+              <a href="#" className="block hover:underline">21st century skills</a>
+              <a href="#" className="block hover:underline">Alumnis</a>
+            </div>
+          </div>
+          <div>
+            <div className="font-semibold mb-3">Formations</div>
+            <div className="space-y-2 text-sm opacity-90">
+              <a href="#" className="block hover:underline">Ingénierie Informatique et Réseaux</a>
+              <a href="#" className="block hover:underline">Génie Électrique et Systèmes Intelligents</a>
+              <a href="#" className="block hover:underline">Ingénierie Automatisme et Informatique Industrielle</a>
+              <a href="#" className="block hover:underline">Génie Civil, Bâtiments et Travaux Publics (BTP)</a>
+              <a href="#" className="block hover:underline">Génie Industriel</a>
+              <a href="#" className="block hover:underline">Génie Financier</a>
+            </div>
+          </div>
+          <div>
+            <div className="font-semibold mb-3">Recherche</div>
+            <div className="space-y-2 text-sm opacity-90">
+              <a href="#" className="block hover:underline">Stratégie</a>
+              <a href="#" className="block hover:underline">Partenaires de recherche</a>
+              <a href="#" className="block hover:underline">Prix et distinctions</a>
+            </div>
+            <div className="font-semibold mt-6 mb-3">Vie estudiantine</div>
+            <div className="space-y-2 text-sm opacity-90">
+              <a href="#" className="block hover:underline">Présentation</a>
+              <a href="#" className="block hover:underline">Clubs et BDE</a>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto px-4 pb-6">
+          <div className="border-t border-white/30 my-4" />
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm opacity-90">
+            <div>© 2025 EMSI. Tous droits réservés.</div>
+            <div className="flex items-center gap-4">
+              <a href="#" className="hover:underline">Charte de protection des données à caractère personnel</a>
+              <a href="#" className="hover:underline">Plan de site</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
