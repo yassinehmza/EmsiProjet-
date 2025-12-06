@@ -38,6 +38,14 @@ class EtudiantSeeder extends Seeder
                 'filiere' => 'Data Science',
                 'type_stage' => 'PFE',
             ],
+            [
+                'nom' => 'choukri',
+                'prenom' => 'badr',
+                'email' => 'badr.choukri@emsi.ma',
+                'mot_de_passe' => Hash::make('pass123'),
+                'filiere' => 'Resaux et Sécurité',
+                'type_stage' => 'PFE',
+            ],
         ];
 
         foreach ($etudiants as $etudiant) {
