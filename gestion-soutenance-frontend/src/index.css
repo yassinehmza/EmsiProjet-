@@ -126,3 +126,35 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #04905c;
 }
+
+/* Animation dropdown menu */
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.3s ease-out;
+}
+
+/* Amélioration smooth des gradients */
+.bg-gradient-soft {
+  background: linear-gradient(135deg, #008D36 0%, #05A66B 100%);
+}
+
+/* Animation pour les dots du carousel */
+@keyframes dot-expand {
+  from {
+    width: 10px;
+  }
+  to {
+    width: 32px;
+  }
+}
+
