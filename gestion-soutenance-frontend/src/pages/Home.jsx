@@ -160,7 +160,7 @@ export default function Home() {
             <h2 className="text-center text-3xl md:text-4xl font-semibold text-gray-900">Nos Formation</h2>
             <div className="h-1 w-16 bg-[#008D36] mx-auto rounded my-6"></div>
             <div className="grid md:grid-cols-3 md:grid-rows-3 gap-6">
-              <div className="relative rounded-2xl overflow-hidden row-span-3 group">
+              <div id="formation-gc" className="relative rounded-2xl overflow-hidden row-span-3 group">
                 <img src={GC} alt="Centres de carrières" className="w-full h-full max-h-[720px] object-cover transition-transform duration-500 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/85 transition-all duration-300" />
                 <div className="absolute bottom-4 left-4 right-4 text-white text-xl md:text-2xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Génie Civil, Bâtiments et Travaux Publics (BTP)</div>
@@ -172,7 +172,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="relative rounded-2xl overflow-hidden group">
+              <div id="formation-gei" className="relative rounded-2xl overflow-hidden group">
                 <img src={GEI} alt="Nos recruteurs" className="w-full h-48 md:h-56 object-cover transition-transform duration-500 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/90 transition-all duration-300" />
                 <div className="absolute bottom-4 left-4 right-4 text-white text-xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Génie Industriel</div>
@@ -184,7 +184,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="relative rounded-2xl overflow-hidden group">
+              <div id="formation-gf" className="relative rounded-2xl overflow-hidden group">
                 <img src={GF} alt="Génie Financier" className="w-full h-48 md:h-56 object-cover transition-transform duration-500 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/90 transition-all duration-300" />
                 <div className="absolute bottom-4 left-4 right-4 text-white text-xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Génie Financier</div>
@@ -196,7 +196,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="relative rounded-2xl overflow-hidden group">
+              <div id="formation-ge" className="relative rounded-2xl overflow-hidden group">
                 <img src={GE} alt="Génie Électrique et Systèmes Intelligents" className="w-full h-48 md:h-56 object-cover transition-transform duration-500 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/90 transition-all duration-300" />
                 <div className="absolute bottom-4 left-4 right-4 text-white text-xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Génie Électrique et Systèmes Intelligents</div>
@@ -208,7 +208,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="relative rounded-2xl overflow-hidden row-span-3 group">
+              <div id="formation-iir" className="relative rounded-2xl overflow-hidden row-span-3 group">
                 <img src={IIR} alt="Alumni" className="w-full h-full max-h-[720px] object-cover transition-transform duration-500 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-[#008D36]/55 group-hover:bg-[#008D36]/85 transition-all duration-300" />
                 <div className="absolute bottom-4 left-4 right-4 text-white text-xl md:text-2xl font-semibold transition-opacity duration-300 group-hover:opacity-0">Ingénierie Informatique et Réseaux</div>
@@ -233,7 +233,6 @@ export default function Home() {
             </div>
             <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/10">Ecole Reconnue par l'Etat</div>
             <p className="text-sm opacity-90">L’École Marocaine des Sciences de l’Ingénieur, créée il y a plus de 39 ans, est la plus grande école d’ingénieurs privée au Maroc. L’EMSI est reconnue par l’État, délivre une formation d’excellence en ingénierie et dispose de 19 campus à travers le Maroc, à Casablanca, Rabat, Marrakech, Fès et Tanger.</p>
-            <button className="px-4 py-2 rounded-lg bg-white text-[#008D36] font-medium">Télécharger la brochure</button>
           </div>
           <div>
             <div className="font-semibold mb-3">EMSI</div>
@@ -245,49 +244,23 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <div className="font-semibold mb-3">Employabilité</div>
-            <div className="space-y-2 text-sm opacity-90">
-              <a href="#" className="block hover:underline">Ressources Carrière</a>
-              <a href="#" className="block hover:underline">Centre de carrière</a>
-              <a href="#" className="block hover:underline">21st century skills</a>
-              <a href="#" className="block hover:underline">Alumnis</a>
-            </div>
-          </div>
-          <div>
             <div className="font-semibold mb-3">Formations</div>
             <div className="space-y-2 text-sm opacity-90">
-              <a href="#" className="block hover:underline">Ingénierie Informatique et Réseaux</a>
-              <a href="#" className="block hover:underline">Génie Électrique et Systèmes Intelligents</a>
-              <a href="#" className="block hover:underline">Ingénierie Automatisme et Informatique Industrielle</a>
-              <a href="#" className="block hover:underline">Génie Civil, Bâtiments et Travaux Publics (BTP)</a>
-              <a href="#" className="block hover:underline">Génie Industriel</a>
-              <a href="#" className="block hover:underline">Génie Financier</a>
+              <a href="#formation-iir" className="block hover:underline">Ingénierie Informatique et Réseaux</a>
+              <a href="#formation-ge" className="block hover:underline">Génie Électrique et Systèmes Intelligents</a>
+              <a href="#formation-gc" className="block hover:underline">Génie Civil, Bâtiments et Travaux Publics (BTP)</a>
+              <a href="#formation-gei" className="block hover:underline">Génie Industriel</a>
+              <a href="#formation-gf" className="block hover:underline">Génie Financier</a>
             </div>
           </div>
-          <div>
-            <div className="font-semibold mb-3">Recherche</div>
-            <div className="space-y-2 text-sm opacity-90">
-              <a href="#" className="block hover:underline">Stratégie</a>
-              <a href="#" className="block hover:underline">Partenaires de recherche</a>
-              <a href="#" className="block hover:underline">Prix et distinctions</a>
-            </div>
-            <div className="font-semibold mt-6 mb-3">Vie estudiantine</div>
-            <div className="space-y-2 text-sm opacity-90">
-              <a href="#" className="block hover:underline">Présentation</a>
-              <a href="#" className="block hover:underline">Clubs et BDE</a>
-            </div>
-          </div>
+          
         </div>
         <div className="max-w-6xl mx-auto px-4 pb-6">
           <div className="border-t border-white/30 my-4" />
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm opacity-90">
-            <div>© 2025 EMSI. Tous droits réservés.</div>
-            <div className="flex items-center gap-4">
-              <a href="#" className="hover:underline">Charte de protection des données à caractère personnel</a>
-              <a href="#" className="hover:underline">Plan de site</a>
-            </div>
+
+            <div className="text-center items-center"  >© 2025 EMSI. Tous droits réservés.</div>
           </div>
-        </div>
+        
       </footer>
     </div>
   );
