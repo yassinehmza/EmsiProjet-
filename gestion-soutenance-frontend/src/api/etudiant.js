@@ -13,6 +13,8 @@ export const getEtudiantRapports = async (etudiantId) => {
 
 // Déposer un nouveau rapport
 export const deposerRapport = async (etudiantId, payload) => {
+  // Si payload est FormData (fichier), ne pas modifier les headers
+  // Axios détecte automatiquement FormData et met 'Content-Type: multipart/form-data'
   const { data } = await client.post(`/etudiants/${etudiantId}/rapports`, payload);
   return data.rapport; // Backend retourne { rapport: {...} }
 };

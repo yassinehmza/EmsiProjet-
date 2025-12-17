@@ -13,7 +13,8 @@ export default function MesRapports() {
   const [formData, setFormData] = useState({
     titre: '',
     date_depot: new Date().toISOString().split('T')[0],
-    commentaire: ''
+    commentaire: '',
+    fichier: null
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -43,12 +44,24 @@ export default function MesRapports() {
       return;
     }
 
+    if (!formData.fichier) {
+      addToast({ type: 'error', message: 'Veuillez sélectionner un fichier' });
+      return;
+    }
+
     setSubmitting(true);
     try {
-      await deposerRapport(profile.id, formData);
+      // Créer FormData pour envoyer le fichier
+      const formPayload = new FormData();
+      formPayload.append('titre', formData.titre);
+      formPayload.append('date_depot', formData.date_depot);
+      formPayload.append('commentaire', formData.commentaire);
+      formPayload.append('fichier', formData.fichier);
+
+      await deposerRapport(profile.id, formPayload);
       addToast({ type: 'success', message: 'Rapport déposé avec succès' });
       setShowUpload(false);
-      setFormData({ titre: '', date_depot: new Date().toISOString().split('T')[0], commentaire: '' });
+      setFormData({ titre: '', date_depot: new Date().toISOString().split('T')[0], commentaire: '', fichier: null });
       loadRapports();
     } catch (error) {
       console.error('Erreur dépôt rapport:', error);
@@ -185,6 +198,26 @@ export default function MesRapports() {
               />
             </div>
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Fichier du rapport (PDF, DOC, DOCX) *
+              </label>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={(e) => setFormData({...formData, fichier: e.target.files[0]})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#008D36] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#008D36] file:text-white file:cursor-pointer hover:file:bg-[#05A66B] file:text-sm file:font-medium"
+                required
+              />
+              {formData.fichier && (
+                <p className="mt-2 text-sm text-emerald-600 flex items-center gap-2">
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                  </svg>
+                  Fichier sélectionné : {formData.fichier.name} ({(formData.fichier.size / 1024 / 1024).toFixed(2)} MB)
+                </p>
+              )}
+            </div>
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Commentaire (optionnel)</label>
               <textarea
                 rows={3}
@@ -199,7 +232,7 @@ export default function MesRapports() {
                 type="button"
                 onClick={() => {
                   setShowUpload(false);
-                  setFormData({ titre: '', date_depot: new Date().toISOString().split('T')[0], commentaire: '' });
+                  setFormData({ titre: '', date_depot: new Date().toISOString().split('T')[0], commentaire: '', fichier: null });
                 }}
                 className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
                 disabled={submitting}
