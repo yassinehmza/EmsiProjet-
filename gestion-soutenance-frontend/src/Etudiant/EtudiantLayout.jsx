@@ -17,7 +17,7 @@ export default function EtudiantLayout() {
   }, [toasts, removeToast]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-emerald-50/20 to-gray-50">
       <div className="flex min-h-screen">
         {/* Backdrop pour mobile */}
         {open && (
@@ -34,13 +34,13 @@ export default function EtudiantLayout() {
           {/* Logo et titre */}
           <div className="px-6 py-6 border-b border-gray-200/50">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#008D36] to-[#05A66B] text-white flex items-center justify-center shadow-lg shadow-emerald-500/30">
                 <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
                 </svg>
               </div>
               <div>
-                <div className="text-lg font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">Espace Étudiant</div>
+                <div className="text-lg font-bold bg-gradient-to-r from-[#008D36] to-[#05A66B] bg-clip-text text-transparent">Espace Étudiant</div>
                 <div className="text-xs text-gray-500">Mon Parcours</div>
               </div>
             </div>
@@ -49,7 +49,7 @@ export default function EtudiantLayout() {
           <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-3">Menu Principal</div>
             
-            <NavLink to="/etudiant/dashboard" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30':'text-gray-700 hover:bg-blue-50/50'}`}>
+            <NavLink to="/etudiant/dashboard" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-[#008D36] to-[#05A66B] text-white shadow-lg shadow-emerald-500/30':'text-gray-700 hover:bg-emerald-50/50'}`}>
               {({isActive}) => (
                 <>
                   <svg className={`h-5 w-5 ${isActive?'':'group-hover:scale-110 transition-transform'}`} viewBox="0 0 24 24" fill="currentColor">
@@ -63,7 +63,7 @@ export default function EtudiantLayout() {
             
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mt-6 mb-3">Mon Stage</div>
             
-            <NavLink to="/etudiant/rapports" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30':'text-gray-700 hover:bg-blue-50/50'}`}>
+            <NavLink to="/etudiant/rapports" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-[#008D36] to-[#05A66B] text-white shadow-lg shadow-emerald-500/30':'text-gray-700 hover:bg-emerald-50/50'}`}>
               {({isActive}) => (
                 <>
                   <svg className={`h-5 w-5 ${isActive?'':'group-hover:scale-110 transition-transform'}`} viewBox="0 0 24 24" fill="currentColor">
@@ -75,7 +75,7 @@ export default function EtudiantLayout() {
               )}
             </NavLink>
             
-            <NavLink to="/etudiant/soutenance" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30':'text-gray-700 hover:bg-blue-50/50'}`}>
+            <NavLink to="/etudiant/soutenance" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-[#008D36] to-[#05A66B] text-white shadow-lg shadow-emerald-500/30':'text-gray-700 hover:bg-emerald-50/50'}`}>
               {({isActive}) => (
                 <>
                   <svg className={`h-5 w-5 ${isActive?'':'group-hover:scale-110 transition-transform'}`} viewBox="0 0 24 24" fill="currentColor">
@@ -87,7 +87,7 @@ export default function EtudiantLayout() {
               )}
             </NavLink>
             
-            <NavLink to="/etudiant/remarques" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30':'text-gray-700 hover:bg-blue-50/50'}`}>
+            <NavLink to="/etudiant/remarques" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-[#008D36] to-[#05A66B] text-white shadow-lg shadow-emerald-500/30':'text-gray-700 hover:bg-emerald-50/50'}`}>
               {({isActive}) => (
                 <>
                   <svg className={`h-5 w-5 ${isActive?'':'group-hover:scale-110 transition-transform'}`} viewBox="0 0 24 24" fill="currentColor">
@@ -102,8 +102,8 @@ export default function EtudiantLayout() {
 
           {/* User Profile Section */}
           <div className="px-4 py-4 border-t border-gray-200/50">
-            <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100/50">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold shadow-md">
+            <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-100/50">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#008D36] to-[#05A66B] text-white flex items-center justify-center font-bold shadow-md">
                 {profile?.nom?.[0]?.toUpperCase() || 'E'}
               </div>
               <div className="flex-1 min-w-0">
@@ -139,7 +139,7 @@ export default function EtudiantLayout() {
               
               <div className="flex-1 flex items-center gap-4 md:gap-6 justify-end">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <svg className="h-5 w-5 text-blue-500" viewBox="0 0 24 24" fill="currentColor">
+                  <svg className="h-5 w-5 text-[#008D36]" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
                   </svg>
                   <span className="hidden md:inline font-medium">Étudiant</span>
@@ -161,7 +161,7 @@ export default function EtudiantLayout() {
           <div key={toast.id} className={`animate-slide-in-right px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-xl border min-w-[300px] ${
             toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400 text-white' :
             toast.type === 'error' ? 'bg-red-500/90 border-red-400 text-white' :
-            'bg-blue-500/90 border-blue-400 text-white'
+            'bg-[#008D36]/90 border-emerald-400 text-white'
           }`}>
             <div className="flex items-center gap-3">
               <svg className="h-6 w-6 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">

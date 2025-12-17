@@ -17,7 +17,7 @@ export default function ProfesseurLayout() {
   }, [toasts, removeToast]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/20 to-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-emerald-50/20 to-gray-50">
       <div className="flex min-h-screen">
         {/* Backdrop pour mobile */}
         {open && (
@@ -34,13 +34,13 @@ export default function ProfesseurLayout() {
           {/* Logo et titre */}
           <div className="px-6 py-6 border-b border-gray-200/50">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-500/30">
+              <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#008D36] to-[#05A66B] text-white flex items-center justify-center shadow-lg shadow-emerald-500/30">
                 <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/>
                 </svg>
               </div>
               <div>
-                <div className="text-lg font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent">Espace Professeur</div>
+                <div className="text-lg font-bold bg-gradient-to-r from-[#008D36] to-[#05A66B] bg-clip-text text-transparent">Espace Professeur</div>
                 <div className="text-xs text-gray-500">Encadrement</div>
               </div>
             </div>
@@ -49,7 +49,7 @@ export default function ProfesseurLayout() {
           <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-3">Menu Principal</div>
             
-            <NavLink to="/professeur/dashboard" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30':'text-gray-700 hover:bg-purple-50/50'}`}>
+            <NavLink to="/professeur/dashboard" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-[#008D36] to-[#05A66B] text-white shadow-lg shadow-emerald-500/30':'text-gray-700 hover:bg-emerald-50/50'}`}>
               {({isActive}) => (
                 <>
                   <svg className={`h-5 w-5 ${isActive?'':'group-hover:scale-110 transition-transform'}`} viewBox="0 0 24 24" fill="currentColor">
@@ -61,7 +61,7 @@ export default function ProfesseurLayout() {
               )}
             </NavLink>
             
-            <NavLink to="/professeur/etudiants" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30':'text-gray-700 hover:bg-purple-50/50'}`}>
+            <NavLink to="/professeur/etudiants" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-[#008D36] to-[#05A66B] text-white shadow-lg shadow-emerald-500/30':'text-gray-700 hover:bg-emerald-50/50'}`}>
               {({isActive}) => (
                 <>
                   <svg className={`h-5 w-5 ${isActive?'':'group-hover:scale-110 transition-transform'}`} viewBox="0 0 24 24" fill="currentColor">
@@ -73,7 +73,7 @@ export default function ProfesseurLayout() {
               )}
             </NavLink>
             
-            <NavLink to="/professeur/rapports" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30':'text-gray-700 hover:bg-purple-50/50'}`}>
+            <NavLink to="/professeur/rapports" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-[#008D36] to-[#05A66B] text-white shadow-lg shadow-emerald-500/30':'text-gray-700 hover:bg-emerald-50/50'}`}>
               {({isActive}) => (
                 <>
                   <svg className={`h-5 w-5 ${isActive?'':'group-hover:scale-110 transition-transform'}`} viewBox="0 0 24 24" fill="currentColor">
@@ -87,7 +87,7 @@ export default function ProfesseurLayout() {
             
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mt-6 mb-3">Soutenances</div>
             
-            <NavLink to="/professeur/soutenances" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30':'text-gray-700 hover:bg-purple-50/50'}`}>
+            <NavLink to="/professeur/soutenances" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-[#008D36] to-[#05A66B] text-white shadow-lg shadow-emerald-500/30':'text-gray-700 hover:bg-emerald-50/50'}`}>
               {({isActive}) => (
                 <>
                   <svg className={`h-5 w-5 ${isActive?'':'group-hover:scale-110 transition-transform'}`} viewBox="0 0 24 24" fill="currentColor">
@@ -99,7 +99,7 @@ export default function ProfesseurLayout() {
               )}
             </NavLink>
             
-            <NavLink to="/professeur/remarques" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30':'text-gray-700 hover:bg-purple-50/50'}`}>
+            <NavLink to="/professeur/remarques" className={({isActive})=>`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive?'bg-gradient-to-r from-[#008D36] to-[#05A66B] text-white shadow-lg shadow-emerald-500/30':'text-gray-700 hover:bg-emerald-50/50'}`}>
               {({isActive}) => (
                 <>
                   <svg className={`h-5 w-5 ${isActive?'':'group-hover:scale-110 transition-transform'}`} viewBox="0 0 24 24" fill="currentColor">
@@ -114,8 +114,8 @@ export default function ProfesseurLayout() {
 
           {/* User Profile Section */}
           <div className="px-4 py-4 border-t border-gray-200/50">
-            <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gradient-to-r from-purple-50 to-purple-100/50">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 text-white flex items-center justify-center font-bold shadow-md">
+            <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-100/50">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#008D36] to-[#05A66B] text-white flex items-center justify-center font-bold shadow-md">
                 {profile?.nom?.[0]?.toUpperCase() || 'P'}
               </div>
               <div className="flex-1 min-w-0">
@@ -151,7 +151,7 @@ export default function ProfesseurLayout() {
               
               <div className="flex-1 flex items-center gap-4 md:gap-6 justify-end">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <svg className="h-5 w-5 text-purple-500" viewBox="0 0 24 24" fill="currentColor">
+                  <svg className="h-5 w-5 text-[#008D36]" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
                   </svg>
                   <span className="hidden md:inline font-medium">Professeur</span>
@@ -173,7 +173,7 @@ export default function ProfesseurLayout() {
           <div key={toast.id} className={`animate-slide-in-right px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-xl border min-w-[300px] ${
             toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400 text-white' :
             toast.type === 'error' ? 'bg-red-500/90 border-red-400 text-white' :
-            'bg-blue-500/90 border-blue-400 text-white'
+            'bg-[#008D36]/90 border-emerald-400 text-white'
           }`}>
             <div className="flex items-center gap-3">
               <svg className="h-6 w-6 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">

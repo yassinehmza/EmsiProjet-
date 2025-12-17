@@ -19,9 +19,10 @@ export default function Rapports() {
     setLoading(true);
     try {
       const data = await getProfesseurRapports(profile.id);
-      setReports(data);
+      setReports(Array.isArray(data) ? data : (data?.data ? (Array.isArray(data.data) ? data.data : []) : []));
     } catch (error) {
       addToast('Erreur lors du chargement des rapports', 'error');
+      setReports([]);
     } finally {
       setLoading(false);
     }
@@ -90,7 +91,7 @@ export default function Rapports() {
         const prenom = row.etudiant?.prenom || '';
         return (
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#05A66B] to-[#008D36] flex items-center justify-center text-white font-semibold">
               {nom[0]}{prenom[0]}
             </div>
             <div>
@@ -148,14 +149,14 @@ export default function Rapports() {
       label: 'Actions',
       render: (row) => (
         <div className="flex items-center gap-2">
-          <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Télécharger">
+          <button className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Télécharger">
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </button>
           <button 
             onClick={() => handleValidate(row)}
-            className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors" 
+            className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" 
             title="Ajouter une remarque"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -173,62 +174,34 @@ export default function Rapports() {
       
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Rapports</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Rapports</h1>
           <p className="text-gray-600 mt-1">Consulter et valider les rapports de stage</p>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-medium text-gray-600">Total</div>
-            <div className="h-10 w-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/>
-              </svg>
-            </div>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <div className="text-sm text-gray-600 mb-2">Total</div>
           <div className="text-3xl font-bold text-gray-900">{loading ? '...' : reports.length}</div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-medium text-gray-600">En attente</div>
-            <div className="h-10 w-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
-              </svg>
-            </div>
-          </div>
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <div className="text-sm text-gray-600 mb-2">En attente</div>
           <div className="text-3xl font-bold text-gray-900">
             {loading ? '...' : reports.filter(r => r.etat === 'en_attente').length}
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-medium text-gray-600">Validés</div>
-            <div className="h-10 w-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
-          </div>
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <div className="text-sm text-gray-600 mb-2">Validés</div>
           <div className="text-3xl font-bold text-gray-900">
             {loading ? '...' : reports.filter(r => r.etat === 'valide').length}
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-medium text-gray-600">Refusés</div>
-            <div className="h-10 w-10 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-              </svg>
-            </div>
-          </div>
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <div className="text-sm text-gray-600 mb-2">Refusés</div>
           <div className="text-3xl font-bold text-gray-900">
             {loading ? '...' : reports.filter(r => r.etat === 'refuse').length}
           </div>
@@ -236,7 +209,7 @@ export default function Rapports() {
       </div>
 
       {/* Reports Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+      <div className="bg-white rounded-lg border border-gray-200">
         <div className="p-6 border-b border-gray-100">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">Liste des rapports</h2>

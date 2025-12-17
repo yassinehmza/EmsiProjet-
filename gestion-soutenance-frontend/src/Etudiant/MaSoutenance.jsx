@@ -1,19 +1,108 @@
+import { useState, useEffect } from 'react';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { useAuth } from '../store/auth';
+import { useUI } from '../store/ui';
+import { getEtudiantSoutenance } from '../api/etudiant';
 
 export default function MaSoutenance() {
-  const soutenance = {
-    date: '2024-12-15',
-    heure: '14:00',
-    salle: 'C102',
-    duree: '45 min',
-    sujet: 'Développement d\'une application mobile de gestion de pharmacie',
-    jury: [
-      { nom: 'Pr. Ahmed El Fassi', role: 'Président', email: 'a.elfassi@emsi.ma' },
-      { nom: 'Pr. Sara Benjelloun', role: 'Examinateur', email: 's.benjelloun@emsi.ma' },
-      { nom: 'Pr. Mohamed Tazi', role: 'Encadrant', email: 'm.tazi@emsi.ma' }
-    ],
-    statut: 'Planifiée'
+  const { profile } = useAuth();
+  const { addToast } = useUI();
+  const [soutenance, setSoutenance] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [countdown, setCountdown] = useState(null);
+
+  // Calculer le temps restant jusqu'à la soutenance
+  const calculateCountdown = () => {
+    if (!soutenance?.date || !soutenance?.heure) return null;
+    
+    const soutenanceDateTime = new Date(`${soutenance.date}T${soutenance.heure}`);
+    const now = new Date();
+    const diff = soutenanceDateTime - now;
+    
+    if (diff < 0) return null;
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    return { days, hours, minutes, seconds };
   };
+
+  useEffect(() => {
+    loadSoutenance();
+  }, [profile]);
+
+  // Mettre à jour le countdown toutes les secondes
+  useEffect(() => {
+    if (!soutenance?.date || !soutenance?.heure) return;
+
+    console.log('Soutenance data:', {
+      date: soutenance.date,
+      heure: soutenance.heure,
+      combinedDateTime: `${soutenance.date}T${soutenance.heure}`
+    });
+
+    const updateCountdown = () => {
+      const calculated = calculateCountdown();
+      console.log('Countdown calculated:', calculated);
+      setCountdown(calculated);
+    };
+
+    // Mise à jour initiale
+    updateCountdown();
+
+    // Mise à jour toutes les secondes
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [soutenance]);
+
+  const loadSoutenance = async () => {
+    if (!profile?.id) return;
+    
+    setLoading(true);
+    try {
+      const data = await getEtudiantSoutenance(profile.id);
+      setSoutenance(data);
+    } catch (error) {
+      console.error('Erreur chargement soutenance:', error);
+      if (error.response?.status !== 404) {
+        addToast({ type: 'error', message: 'Erreur lors du chargement de la soutenance' });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <Breadcrumbs items={[{label:'Étudiant', href:'/etudiant'},{label:'Ma Soutenance'}]} />
+        <div className="p-12 text-center">
+          <div className="animate-spin h-12 w-12 border-4 border-[#008D36] border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-500">Chargement de votre soutenance...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!soutenance) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <Breadcrumbs items={[{label:'Étudiant', href:'/etudiant'},{label:'Ma Soutenance'}]} />
+        <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
+          <svg className="h-16 w-16 text-gray-300 mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+          </svg>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Aucune soutenance planifiée</h3>
+          <p className="text-gray-500">Votre soutenance n'a pas encore été programmée. Veuillez contacter l'administration.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const juryData = soutenance?.jury || {};
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -21,142 +110,120 @@ export default function MaSoutenance() {
       
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Ma Soutenance</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Ma Soutenance</h1>
           <p className="text-gray-600 mt-1">Informations et détails de votre soutenance</p>
         </div>
-        <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-xl font-semibold">
-          {soutenance.statut}
+        <span className="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg font-semibold">
+          {soutenance.etat === 'annulee' ? 'Annulée' : 'Planifiée'}
         </span>
       </div>
 
       {/* Countdown */}
-      <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 text-white shadow-xl">
-        <div className="text-center">
-          <div className="text-lg mb-2">Soutenance dans</div>
-          <div className="flex items-center justify-center gap-6">
-            <div>
-              <div className="text-5xl font-bold">11</div>
-              <div className="text-blue-100 mt-1">Jours</div>
-            </div>
-            <div className="text-4xl">:</div>
-            <div>
-              <div className="text-5xl font-bold">05</div>
-              <div className="text-blue-100 mt-1">Heures</div>
-            </div>
-            <div className="text-4xl">:</div>
-            <div>
-              <div className="text-5xl font-bold">23</div>
-              <div className="text-blue-100 mt-1">Minutes</div>
+      {countdown && (
+        <div className="bg-[#008D36] rounded-lg p-6 text-white">
+          <div className="text-center">
+            <div className="text-sm mb-3">Soutenance dans</div>
+            <div className="flex items-center justify-center gap-4">
+              <div>
+                <div className="text-3xl font-bold">{countdown.days}</div>
+                <div className="text-emerald-100 text-xs mt-1">Jours</div>
+              </div>
+              <div className="text-2xl">:</div>
+              <div>
+                <div className="text-3xl font-bold">{countdown.hours}</div>
+                <div className="text-emerald-100 text-xs mt-1">Heures</div>
+              </div>
+              <div className="text-2xl">:</div>
+              <div>
+                <div className="text-3xl font-bold">{countdown.minutes}</div>
+                <div className="text-emerald-100 text-xs mt-1">Minutes</div>
+              </div>
+              <div className="text-2xl">:</div>
+              <div>
+                <div className="text-3xl font-bold">{countdown.seconds}</div>
+                <div className="text-emerald-100 text-xs mt-1">Secondes</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <svg className="h-5 w-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
-            </svg>
-            Date & Heure
-          </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Date & Heure</h2>
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
               <span className="text-gray-600">Date</span>
-              <span className="font-semibold text-gray-900">{new Date(soutenance.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+              <span className="font-semibold text-gray-900">
+                {new Date(soutenance.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+              </span>
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
               <span className="text-gray-600">Heure</span>
               <span className="font-semibold text-gray-900">{soutenance.heure}</span>
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-              <span className="text-gray-600">Durée</span>
-              <span className="font-semibold text-gray-900">{soutenance.duree}</span>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
               <span className="text-gray-600">Salle</span>
               <span className="font-semibold text-gray-900">{soutenance.salle}</span>
             </div>
+            {soutenance.note && (
+              <div className="flex items-center justify-between p-3 bg-emerald-50 rounded">
+                <span className="text-gray-600">Note finale</span>
+                <span className="font-bold text-[#008D36] text-xl">{soutenance.note}/20</span>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <svg className="h-5 w-5 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-            </svg>
-            Localisation
-          </h2>
-          <div className="aspect-video bg-gray-100 rounded-xl mb-4 flex items-center justify-center">
-            <svg className="h-16 w-16 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-            </svg>
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Localisation</h2>
+          <div className="aspect-video bg-gray-100 rounded mb-3 flex items-center justify-center">
+            <div className="text-gray-400 text-sm">Plan de localisation</div>
           </div>
           <div className="text-center">
             <div className="font-semibold text-gray-900">EMSI Casablanca</div>
-            <div className="text-sm text-gray-600 mt-1">Bâtiment C - 1er étage</div>
+            <div className="text-sm text-gray-600 mt-1">Salle: {soutenance.salle}</div>
           </div>
         </div>
       </div>
 
-      {/* Subject */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <svg className="h-5 w-5 text-emerald-600" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/>
-          </svg>
-          Sujet de stage
-        </h2>
-        <p className="text-gray-700 text-lg">{soutenance.sujet}</p>
-      </div>
-
       {/* Jury */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <svg className="h-5 w-5 text-amber-600" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-          </svg>
-          Membres du jury
-        </h2>
-        <div className="space-y-3">
-          {soutenance.jury.map((membre, idx) => (
-            <div key={idx} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold">
-                {membre.nom.split(' ').filter(n => n.startsWith('Pr.')?false:true).map(n => n[0]).join('')}
+      {juryData.professeurs && juryData.professeurs.length > 0 && (
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Membres du jury</h2>
+          <div className="space-y-3">
+            {juryData.professeurs.map((professeur, idx) => (
+              <div key={idx} className="flex items-center gap-4 p-4 bg-gray-50 rounded hover:bg-gray-100">
+                <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-white font-semibold text-sm">
+                  {professeur.nom?.charAt(0)}{professeur.prenom?.charAt(0)}
+                </div>
+                <div className="flex-1">
+                  <div className="font-semibold text-gray-900">{professeur.nom} {professeur.prenom}</div>
+                  <div className="text-sm text-gray-600">{professeur.email}</div>
+                </div>
               </div>
-              <div className="flex-1">
-                <div className="font-semibold text-gray-900">{membre.nom}</div>
-                <div className="text-sm text-gray-600">{membre.email}</div>
-              </div>
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                membre.role === 'Président' ? 'bg-purple-100 text-purple-700' :
-                membre.role === 'Encadrant' ? 'bg-blue-100 text-blue-700' :
-                'bg-emerald-100 text-emerald-700'
-              }`}>
-                {membre.role}
-              </span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Checklist */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Préparation</h2>
-        <div className="space-y-3">
+      <div className="bg-white rounded-lg p-5 border border-gray-200">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Préparation</h2>
+        <div className="space-y-2">
           {[
-            { task: 'Préparer la présentation PowerPoint', done: true },
-            { task: 'Répéter la présentation', done: true },
+            { task: 'Préparer la présentation PowerPoint', done: false },
+            { task: 'Répéter la présentation', done: false },
             { task: 'Imprimer 3 copies du rapport final', done: false },
             { task: 'Préparer les réponses aux questions potentielles', done: false },
             { task: 'Vérifier le matériel (clé USB, ordinateur)', done: false }
           ].map((item, idx) => (
-            <label key={idx} className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer">
+            <label key={idx} className="flex items-center gap-3 p-3 rounded hover:bg-gray-50 cursor-pointer">
               <input 
                 type="checkbox" 
                 defaultChecked={item.done}
-                className="h-5 w-5 rounded text-blue-600 focus:ring-2 focus:ring-blue-500"
+                className="h-4 w-4 rounded text-emerald-600"
               />
               <span className={`flex-1 ${item.done ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
                 {item.task}

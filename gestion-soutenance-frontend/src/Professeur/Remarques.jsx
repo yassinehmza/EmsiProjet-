@@ -93,13 +93,13 @@ export default function Remarques() {
       
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Remarques</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Remarques</h1>
           <p className="text-gray-600 mt-1">Gérer les remarques et feedbacks</p>
         </div>
         <button
           onClick={() => setShowNewRemarque(!showNewRemarque)}
           disabled={!selectedRapport}
-          className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 bg-[#008D36] text-white rounded-xl hover:bg-[#05A66B] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
@@ -110,7 +110,7 @@ export default function Remarques() {
 
       {loading ? (
         <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#008D36]"></div>
           <p className="mt-2 text-gray-500">Chargement...</p>
         </div>
       ) : (
@@ -135,8 +135,8 @@ export default function Remarques() {
                     <button
                       key={rapport.id}
                       onClick={() => handleSelectRapport(rapport)}
-                      className={`w-full p-4 text-left hover:bg-purple-50 transition-colors ${
-                        selectedRapport?.id === rapport.id ? 'bg-purple-50 border-l-4 border-purple-600' : ''
+                      className={`w-full p-4 text-left hover:bg-emerald-50 transition-colors ${
+                        selectedRapport?.id === rapport.id ? 'bg-emerald-50 border-l-4 border-[#008D36]' : ''
                       }`}
                     >
                       <div className="font-medium text-gray-900">{rapport.type || `Rapport ${rapport.id}`}</div>
@@ -169,13 +169,13 @@ export default function Remarques() {
 
               {/* New Remarque Form */}
               {showNewRemarque && selectedRapport && (
-                <div className="p-4 border-b border-gray-100 bg-purple-50/50 animate-slide-up">
+                <div className="p-4 border-b border-gray-100 bg-emerald-50/50 animate-slide-up">
                   <h3 className="font-medium text-gray-900 mb-3">Nouvelle remarque</h3>
                   <textarea
                     value={newRemarque}
                     onChange={(e) => setNewRemarque(e.target.value)}
                     rows={4}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#008D36]"
                     placeholder="Entrer votre remarque..."
                   />
                   <div className="flex gap-3 mt-3">
@@ -190,7 +190,7 @@ export default function Remarques() {
                     </button>
                     <button
                       onClick={handleSubmitRemarque}
-                      className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
+                      className="flex-1 px-4 py-2 bg-[#008D36] text-white rounded-xl hover:bg-[#05A66B] transition-colors"
                     >
                       Envoyer
                     </button>
@@ -214,7 +214,7 @@ export default function Remarques() {
                     <p>Aucune remarque pour ce rapport</p>
                     <button
                       onClick={() => setShowNewRemarque(true)}
-                      className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
+                      className="mt-4 px-4 py-2 bg-[#008D36] text-white rounded-xl hover:bg-[#05A66B] transition-colors"
                     >
                       Ajouter une remarque
                     </button>
@@ -224,7 +224,7 @@ export default function Remarques() {
                     <div key={remarque.id} className="p-4 hover:bg-gray-50 transition-colors">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#05A66B] to-[#008D36] flex items-center justify-center text-white font-semibold text-sm">
                             {remarque.professeur?.nom?.[0]}{remarque.professeur?.prenom?.[0]}
                           </div>
                           <div>

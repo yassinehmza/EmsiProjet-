@@ -191,60 +191,40 @@ export default function Etudiants() {
       <div>
         <Breadcrumbs items={[{label:'Admin', href:'/admin'},{label:'Étudiants'}]} />
         <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-blue-100 text-sm font-medium">Total</span>
-              <svg className="h-8 w-8 opacity-30" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-              </svg>
-            </div>
-            <div className="text-3xl font-bold">{items.length}</div>
-            <div className="text-blue-100 text-sm mt-1">Étudiants inscrits</div>
+          <div className="bg-white border border-gray-200 rounded-lg p-5">
+            <span className="text-gray-600 text-sm">Total</span>
+            <div className="text-3xl font-bold text-gray-900 mt-1">{items.length}</div>
+            <div className="text-gray-500 text-sm mt-1">Étudiants inscrits</div>
           </div>
           
-          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white shadow-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-emerald-100 text-sm font-medium">Résultats</span>
-              <svg className="h-8 w-8 opacity-30" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-              </svg>
-            </div>
-            <div className="text-3xl font-bold">{filtered.length}</div>
-            <div className="text-emerald-100 text-sm mt-1">Trouvés</div>
+          <div className="bg-white border border-gray-200 rounded-lg p-5">
+            <span className="text-gray-600 text-sm">Résultats</span>
+            <div className="text-3xl font-bold text-gray-900 mt-1">{filtered.length}</div>
+            <div className="text-gray-500 text-sm mt-1">Trouvés</div>
           </div>
           
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-purple-100 text-sm font-medium">Page</span>
-              <svg className="h-8 w-8 opacity-30" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
-              </svg>
-            </div>
-            <div className="text-3xl font-bold">{page}/{totalPages}</div>
-            <div className="text-purple-100 text-sm mt-1">Pagination</div>
+          <div className="bg-white border border-gray-200 rounded-lg p-5">
+            <span className="text-gray-600 text-sm">Page</span>
+            <div className="text-3xl font-bold text-gray-900 mt-1">{page}/{totalPages}</div>
+            <div className="text-gray-500 text-sm mt-1">Pagination</div>
           </div>
           
-          <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl p-6 text-white shadow-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-amber-100 text-sm font-medium">Par page</span>
-              <svg className="h-8 w-8 opacity-30" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
-              </svg>
-            </div>
-            <div className="text-3xl font-bold">{perPage}</div>
-            <div className="text-amber-100 text-sm mt-1">Affichés</div>
+          <div className="bg-white border border-gray-200 rounded-lg p-5">
+            <span className="text-gray-600 text-sm">Par page</span>
+            <div className="text-3xl font-bold text-gray-900 mt-1">{perPage}</div>
+            <div className="text-gray-500 text-sm mt-1">Affichés</div>
           </div>
         </div>
       </div>
 
       {/* Carte principale avec design moderne */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         {/* Header de la carte */}
-        <div className="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-100">
+        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Gestion des étudiants</h2>
-              <p className="text-sm text-gray-500 mt-1">Gérer les inscriptions et affectations</p>
+              <h2 className="text-lg font-semibold text-gray-900">Gestion des étudiants</h2>
+              <p className="text-sm text-gray-600 mt-1">Gérer les inscriptions et affectations</p>
             </div>
             <div className="flex items-center gap-3">
               <Button 
@@ -294,17 +274,10 @@ export default function Etudiants() {
                   addToast({ type: 'success', message: `${rows.length} étudiant(s) exporté(s)` });
                 }}
                 variant="secondary"
-                className="group"
               >
-                <svg className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
-                </svg>
                 Exporter CSV
               </Button>
-              <Button onClick={() => setCreateOpen(true)} className="group shadow-lg shadow-emerald-500/30">
-                <svg className="h-5 w-5 mr-2 group-hover:rotate-90 transition-transform" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                </svg>
+              <Button onClick={() => setCreateOpen(true)}>
                 Nouvel étudiant
               </Button>
             </div>
@@ -312,52 +285,36 @@ export default function Etudiants() {
         </div>
 
         {/* Filtres améliorés */}
-        <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-100">
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Recherche globale</label>
-              <div className="relative">
-                <input 
-                  className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" 
-                  value={query} 
-                  onChange={e=>{setQuery(e.target.value); setPage(1);}} 
-                  placeholder="Rechercher par nom, email..."
-                />
-                <svg className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <circle cx="11" cy="11" r="8" strokeWidth="2"/>
-                  <path d="m21 21-4.35-4.35" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </div>
+              <input 
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" 
+                value={query} 
+                onChange={e=>{setQuery(e.target.value); setPage(1);}} 
+                placeholder="Rechercher par nom, email..."
+              />
             </div>
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Filière</label>
-              <div className="relative">
-                <input 
-                  className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" 
-                  value={filterFiliere} 
-                  onChange={e=>{setFilterFiliere(e.target.value); setPage(1);}} 
-                  placeholder="Filtrer par filière"
-                />
-                <svg className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
-                </svg>
-              </div>
+              <input 
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" 
+                value={filterFiliere} 
+                onChange={e=>{setFilterFiliere(e.target.value); setPage(1);}} 
+                placeholder="Filtrer par filière"
+              />
             </div>
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Type de stage</label>
-              <div className="relative">
-                <input 
-                  className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" 
-                  value={filterType} 
-                  onChange={e=>{setFilterType(e.target.value); setPage(1);}} 
-                  placeholder="Filtrer par type"
-                />
-                <svg className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
-                </svg>
-              </div>
+              <input 
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" 
+                value={filterType} 
+                onChange={e=>{setFilterType(e.target.value); setPage(1);}} 
+                placeholder="Filtrer par type"
+              />
             </div>
           </div>
           {(query || filterFiliere || filterType) && (
@@ -366,34 +323,25 @@ export default function Etudiants() {
               {query && (
                 <button 
                   onClick={()=>{setQuery(''); setPage(1);}} 
-                  className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm font-medium transition-colors"
+                  className="px-3 py-1 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-sm"
                 >
-                  <span>Recherche: {query}</span>
-                  <svg className="h-4 w-4 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                  </svg>
+                  Recherche: {query} ×
                 </button>
               )}
               {filterFiliere && (
                 <button 
                   onClick={()=>{setFilterFiliere(''); setPage(1);}} 
-                  className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 text-sm font-medium transition-colors"
+                  className="px-3 py-1 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-sm"
                 >
-                  <span>Filière: {filterFiliere}</span>
-                  <svg className="h-4 w-4 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                  </svg>
+                  Filière: {filterFiliere} ×
                 </button>
               )}
               {filterType && (
                 <button 
                   onClick={()=>{setFilterType(''); setPage(1);}} 
-                  className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 text-sm font-medium transition-colors"
+                  className="px-3 py-1 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-sm"
                 >
-                  <span>Type: {filterType}</span>
-                  <svg className="h-4 w-4 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                  </svg>
+                  Type: {filterType} ×
                 </button>
               )}
               <button 
@@ -440,7 +388,7 @@ export default function Etudiants() {
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold shadow-lg">
+                      <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#008D36] to-[#05A66B] text-white flex items-center justify-center font-bold shadow-lg">
                         {item.nom?.[0]?.toUpperCase() || 'E'}
                       </div>
                       <span className="font-semibold text-gray-900">{item.nom}</span>
@@ -456,7 +404,7 @@ export default function Etudiants() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-50 text-purple-700 text-sm font-medium">
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-sm font-medium">
                       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
                       </svg>
@@ -475,7 +423,7 @@ export default function Etudiants() {
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button 
                         onClick={() => openEdit(item)} 
-                        className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                        className="p-2 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors"
                         title="Modifier"
                       >
                         <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">

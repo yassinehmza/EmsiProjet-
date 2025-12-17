@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useAuth } from '../store/auth';
 import { useUI } from '../store/ui';
-import { getEtudiantRapports } from '../api/etudiant';
+import { getEtudiantRapports, deposerRapport } from '../api/etudiant';
 
 export default function MesRapports() {
   const { profile } = useAuth();
@@ -10,30 +10,89 @@ export default function MesRapports() {
   const [rapports, setRapports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showUpload, setShowUpload] = useState(false);
-  const [selectedRapport, setSelectedRapport] = useState(null);
+  const [formData, setFormData] = useState({
+    titre: '',
+    date_depot: new Date().toISOString().split('T')[0],
+    commentaire: ''
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const loadRapports = async () => {
-      if (!profile?.id) return;
-      
-      setLoading(true);
-      try {
-        const data = await getEtudiantRapports(profile.id);
-        setRapports(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error('Erreur chargement rapports:', error);
-        addToast({ type: 'error', message: 'Erreur lors du chargement des rapports' });
-      } finally {
-        setLoading(false);
-      }
-    };
-    
     loadRapports();
-  }, [profile, addToast]);
+  }, [profile]);
 
-  const handleUpload = (rapport) => {
-    setSelectedRapport(rapport);
-    setShowUpload(true);
+  const loadRapports = async () => {
+    if (!profile?.id) return;
+    
+    setLoading(true);
+    try {
+      const data = await getEtudiantRapports(profile.id);
+      setRapports(data);
+    } catch (error) {
+      console.error('Erreur chargement rapports:', error);
+      addToast({ type: 'error', message: 'Erreur lors du chargement des rapports' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitRapport = async (e) => {
+    e.preventDefault();
+    if (!formData.titre.trim()) {
+      addToast({ type: 'error', message: 'Le titre est requis' });
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await deposerRapport(profile.id, formData);
+      addToast({ type: 'success', message: 'Rapport déposé avec succès' });
+      setShowUpload(false);
+      setFormData({ titre: '', date_depot: new Date().toISOString().split('T')[0], commentaire: '' });
+      loadRapports();
+    } catch (error) {
+      console.error('Erreur dépôt rapport:', error);
+      addToast({ type: 'error', message: error.response?.data?.message || 'Erreur lors du dépôt du rapport' });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Calculer les stats
+  const stats = {
+    total: rapports.length,
+    valides: rapports.filter(r => r.etat === 'valide').length,
+    enCours: rapports.filter(r => r.etat === 'en_attente').length,
+    noteMoyenne: rapports.filter(r => r.note).length > 0 
+      ? (rapports.reduce((sum, r) => sum + (r.note || 0), 0) / rapports.filter(r => r.note).length).toFixed(1)
+      : 'N/A'
+  };
+
+  const mapEtatToStatut = (etat) => {
+    const mapping = {
+      'en_attente': 'En cours',
+      'valide': 'Validé',
+      'rejete': 'Rejeté'
+    };
+    return mapping[etat] || etat;
+  };
+
+  const getStatutColor = (etat) => {
+    switch(etat) {
+      case 'valide': return 'bg-emerald-100 text-emerald-700';
+      case 'en_attente': return 'bg-amber-100 text-amber-700';
+      case 'rejete': return 'bg-red-100 text-red-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const getIconColor = (etat) => {
+    switch(etat) {
+      case 'valide': return 'bg-emerald-100 text-emerald-600';
+      case 'en_attente': return 'bg-amber-100 text-amber-600';
+      case 'rejete': return 'bg-red-100 text-red-600';
+      default: return 'bg-gray-100 text-gray-600';
+    }
   };
 
   return (
@@ -42,73 +101,60 @@ export default function MesRapports() {
       
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Mes Rapports</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Mes Rapports</h1>
           <p className="text-gray-600 mt-1">Gérer et soumettre vos rapports de stage</p>
         </div>
+        <button
+          onClick={() => setShowUpload(true)}
+          className="px-4 py-2 bg-[#008D36] text-white rounded-xl hover:bg-[#05A66B] transition-colors"
+        >
+          Nouveau rapport
+        </button>
       </div>
 
       {/* Progress Overview */}
-      <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-xl">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-xl font-bold mb-1">Progression des rapports</h2>
-            <p className="text-blue-100">3 rapports sur 4 validés</p>
+      {stats.total > 0 && (
+        <div className="bg-[#008D36] rounded-lg p-5 text-white">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h2 className="text-lg font-semibold mb-1">Progression des rapports</h2>
+              <p className="text-emerald-100 text-sm">{stats.valides} rapports sur {stats.total} validés</p>
+            </div>
+            <div className="text-3xl font-bold">{Math.round((stats.valides / stats.total) * 100)}%</div>
           </div>
-          <div className="text-4xl font-bold">75%</div>
+          <div className="h-2 bg-emerald-400/30 rounded-full">
+            <div className="h-full bg-white rounded-full" style={{width: `${(stats.valides / stats.total) * 100}%`}}></div>
+          </div>
         </div>
-        <div className="h-3 bg-blue-400/30 rounded-full overflow-hidden">
-          <div className="h-full bg-white" style={{width: '75%'}}></div>
-        </div>
-      </div>
+      )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-medium text-gray-600">Déposés</div>
-            <div className="h-10 w-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/>
-              </svg>
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-gray-900">3</div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <div className="text-sm text-gray-600 mb-2">Déposés</div>
+          <div className="text-3xl font-bold text-gray-900">{stats.total}</div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-medium text-gray-600">Validés</div>
-            <div className="h-10 w-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-gray-900">2</div>
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <div className="text-sm text-gray-600 mb-2">Validés</div>
+          <div className="text-3xl font-bold text-gray-900">{stats.valides}</div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-medium text-gray-600">En cours</div>
-            <div className="h-10 w-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
-              </svg>
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-gray-900">1</div>
+        <div className="bg-white rounded-lg p-5 border border-gray-200">
+          <div className="text-sm text-gray-600 mb-2">En cours</div>
+          <div className="text-3xl font-bold text-gray-900">{stats.enCours}</div>
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-2">
             <div className="text-sm font-medium text-gray-600">Note moyenne</div>
-            <div className="h-10 w-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
               <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
               </svg>
             </div>
           </div>
-          <div className="text-3xl font-bold text-gray-900">15.5</div>
+          <div className="text-3xl font-bold text-gray-900">{stats.noteMoyenne}</div>
         </div>
       </div>
 
@@ -116,48 +162,59 @@ export default function MesRapports() {
       {showUpload && (
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 animate-slide-up">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Déposer un rapport</h2>
-          <div className="space-y-4">
+          <form onSubmit={handleSubmitRapport} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Type de rapport</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Titre du rapport</label>
               <input
                 type="text"
-                value={selectedRapport?.type || ''}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl bg-gray-50"
+                value={formData.titre}
+                onChange={(e) => setFormData({...formData, titre: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#008D36]"
+                placeholder="Ex: Rapport mensuel - Décembre 2024"
+                required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Fichier PDF</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer">
-                <svg className="h-12 w-12 text-gray-400 mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                </svg>
-                <p className="text-gray-600 mb-1">Cliquer pour sélectionner ou glisser-déposer</p>
-                <p className="text-sm text-gray-400">PDF uniquement (max 10MB)</p>
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Date de dépôt</label>
+              <input
+                type="date"
+                value={formData.date_depot}
+                onChange={(e) => setFormData({...formData, date_depot: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#008D36]"
+                required
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Commentaire (optionnel)</label>
               <textarea
                 rows={3}
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={formData.commentaire}
+                onChange={(e) => setFormData({...formData, commentaire: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#008D36]"
                 placeholder="Ajouter un commentaire..."
               />
             </div>
             <div className="flex gap-3">
               <button
-                onClick={() => setShowUpload(false)}
+                type="button"
+                onClick={() => {
+                  setShowUpload(false);
+                  setFormData({ titre: '', date_depot: new Date().toISOString().split('T')[0], commentaire: '' });
+                }}
                 className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                disabled={submitting}
               >
                 Annuler
               </button>
               <button
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+                type="submit"
+                className="flex-1 px-4 py-2 bg-[#008D36] text-white rounded-xl hover:bg-[#05A66B] transition-colors disabled:bg-gray-400"
+                disabled={submitting}
               >
-                Déposer le rapport
+                {submitting ? 'Dépôt en cours...' : 'Déposer le rapport'}
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
 
@@ -166,65 +223,62 @@ export default function MesRapports() {
         <div className="p-6 border-b border-gray-100">
           <h2 className="text-xl font-bold text-gray-900">Tous les rapports</h2>
         </div>
-        <div className="divide-y divide-gray-100">
-          {rapports.map((rapport) => (
-            <div key={rapport.id} className="p-6 hover:bg-gray-50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${
-                    rapport.statut === 'Validé' ? 'bg-emerald-100 text-emerald-600' :
-                    rapport.statut === 'En cours' ? 'bg-amber-100 text-amber-600' :
-                    rapport.statut === 'À déposer' ? 'bg-gray-100 text-gray-600' :
-                    'bg-blue-100 text-blue-600'
-                  }`}>
-                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">{rapport.type}</h3>
-                    <div className="flex items-center gap-4 mt-1">
-                      {rapport.dateDepot && (
+        {loading ? (
+          <div className="p-12 text-center">
+            <div className="animate-spin h-12 w-12 border-4 border-[#008D36] border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-gray-500">Chargement des rapports...</p>
+          </div>
+        ) : rapports.length === 0 ? (
+          <div className="p-12 text-center">
+            <svg className="h-16 w-16 text-gray-300 mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/>
+            </svg>
+            <p className="text-gray-500 mb-4">Aucun rapport déposé</p>
+            <button
+              onClick={() => setShowUpload(true)}
+              className="px-4 py-2 bg-[#008D36] text-white rounded-xl hover:bg-[#05A66B] transition-colors"
+            >
+              Déposer votre premier rapport
+            </button>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-100">
+            {rapports.map((rapport) => (
+              <div key={rapport.id} className="p-6 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${getIconColor(rapport.etat)}`}>
+                      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900">{rapport.titre}</h3>
+                      <div className="flex items-center gap-4 mt-1">
                         <span className="text-sm text-gray-500">
-                          Déposé le {new Date(rapport.dateDepot).toLocaleDateString('fr-FR')}
+                          Déposé le {new Date(rapport.date_depot).toLocaleDateString('fr-FR')}
                         </span>
-                      )}
-                      {rapport.note && (
-                        <span className="text-sm font-semibold text-purple-600">
-                          Note: {rapport.note}/20
-                        </span>
+                        {rapport.note && (
+                          <span className="text-sm font-semibold text-[#008D36]">
+                            Note: {rapport.note}/20
+                          </span>
+                        )}
+                      </div>
+                      {rapport.commentaire && (
+                        <p className="text-sm text-gray-600 mt-1">{rapport.commentaire}</p>
                       )}
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    rapport.statut === 'Validé' ? 'bg-emerald-100 text-emerald-700' :
-                    rapport.statut === 'En cours' ? 'bg-amber-100 text-amber-700' :
-                    rapport.statut === 'À déposer' ? 'bg-gray-100 text-gray-700' :
-                    'bg-blue-100 text-blue-700'
-                  }`}>
-                    {rapport.statut}
-                  </span>
-                  {rapport.statut === 'À déposer' ? (
-                    <button
-                      onClick={() => handleUpload(rapport)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors text-sm font-medium"
-                    >
-                      Déposer
-                    </button>
-                  ) : (
-                    <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Télécharger">
-                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </button>
-                  )}
+                  <div className="flex items-center gap-3">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatutColor(rapport.etat)}`}>
+                      {mapEtatToStatut(rapport.etat)}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
