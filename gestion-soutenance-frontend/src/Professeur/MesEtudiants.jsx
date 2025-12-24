@@ -24,18 +24,16 @@ export default function MesEtudiants() {
         getProfesseurEtudiants(profile.id)
       ]);
 
-      // Filtrer les étudiants encadrés ou rapportés par ce professeur
-      const mesEtudiants = etudiants.filter(e => 
-        e.encadrant_id === profile.id || e.rapporteur_id === profile.id
-      );
+      // Les étudiants sont déjà filtrés par le backend
+      setStudents(Array.isArray(etudiants) ? etudiants : []);
 
       // Compter les rapports par étudiant
       const rapportsCount = {};
-      rapports.forEach(r => {
+      const rapportsArray = Array.isArray(rapports) ? rapports : [];
+      rapportsArray.forEach(r => {
         rapportsCount[r.etudiant_id] = (rapportsCount[r.etudiant_id] || 0) + 1;
       });
 
-      setStudents(mesEtudiants);
       setRapportsData(rapportsCount);
     } catch (error) {
       console.error('Erreur chargement étudiants:', error);
@@ -62,7 +60,7 @@ export default function MesEtudiants() {
           </div>
           <div>
             <div className="font-semibold text-gray-900">{row.nom} {row.prenom}</div>
-            <div className="text-sm text-gray-500">{row.user?.email || 'N/A'}</div>
+            <div className="text-sm text-gray-500">{row.email || 'N/A'}</div>
           </div>
         </div>
       )
@@ -74,15 +72,6 @@ export default function MesEtudiants() {
         <div>
           <div className="font-medium text-gray-900">{row.filiere || 'N/A'}</div>
           <div className="text-sm text-gray-500">{row.type_stage || 'N/A'}</div>
-        </div>
-      )
-    },
-    {
-      key: 'cne',
-      label: 'CNE',
-      render: (row) => (
-        <div className="max-w-xs">
-          <div className="font-medium text-gray-900">{row.cne || 'N/A'}</div>
         </div>
       )
     },

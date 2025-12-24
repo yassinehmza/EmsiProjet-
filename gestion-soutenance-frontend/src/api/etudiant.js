@@ -30,3 +30,11 @@ export const getRapportRemarques = async (rapportId) => {
   const { data } = await client.get(`/rapports/${rapportId}/remarques`);
   return data.remarques || []; // Backend retourne { remarques: [...] }
 };
+
+// Télécharger un fichier de rapport
+export const downloadRapport = async (rapportId) => {
+  const response = await client.get(`/rapports/${rapportId}/download`, {
+    responseType: 'blob' // Important pour les fichiers
+  });
+  return response.data;
+};

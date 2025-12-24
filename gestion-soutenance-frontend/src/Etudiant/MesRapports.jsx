@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useAuth } from '../store/auth';
 import { useUI } from '../store/ui';
-import { getEtudiantRapports, deposerRapport } from '../api/etudiant';
+import { getEtudiantRapports, deposerRapport, downloadRapport } from '../api/etudiant';
 
 export default function MesRapports() {
   const { profile } = useAuth();
@@ -12,7 +12,7 @@ export default function MesRapports() {
   const [showUpload, setShowUpload] = useState(false);
   const [formData, setFormData] = useState({
     titre: '',
-    date_depot: new Date().toISOString().split('T')[0],
+    type_rapport: 'mensuel',
     commentaire: '',
     fichier: null
   });
@@ -54,20 +54,45 @@ export default function MesRapports() {
       // Créer FormData pour envoyer le fichier
       const formPayload = new FormData();
       formPayload.append('titre', formData.titre);
-      formPayload.append('date_depot', formData.date_depot);
+      formPayload.append('type_rapport', formData.type_rapport);
       formPayload.append('commentaire', formData.commentaire);
-      formPayload.append('fichier', formData.fichier);
+      if (formData.fichier) {
+        formPayload.append('fichier', formData.fichier);
+      }
 
       await deposerRapport(profile.id, formPayload);
       addToast({ type: 'success', message: 'Rapport déposé avec succès' });
       setShowUpload(false);
-      setFormData({ titre: '', date_depot: new Date().toISOString().split('T')[0], commentaire: '', fichier: null });
+      setFormData({ titre: '', type_rapport: 'mensuel', commentaire: '', fichier: null });
       loadRapports();
     } catch (error) {
       console.error('Erreur dépôt rapport:', error);
       addToast({ type: 'error', message: error.response?.data?.message || 'Erreur lors du dépôt du rapport' });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDownload = async (rapport) => {
+    if (!rapport.fichier_path) {
+      addToast({ type: 'error', message: 'Aucun fichier disponible' });
+      return;
+    }
+
+    try {
+      const blob = await downloadRapport(rapport.id);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${rapport.titre}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      addToast({ type: 'success', message: 'Téléchargement démarré' });
+    } catch (error) {
+      console.error('Erreur téléchargement:', error);
+      addToast({ type: 'error', message: 'Erreur lors du téléchargement' });
     }
   };
 
@@ -188,14 +213,18 @@ export default function MesRapports() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Date de dépôt</label>
-              <input
-                type="date"
-                value={formData.date_depot}
-                onChange={(e) => setFormData({...formData, date_depot: e.target.value})}
+              <label className="block text-sm font-medium text-gray-700 mb-2">Type de rapport</label>
+              <select
+                value={formData.type_rapport}
+                onChange={(e) => setFormData({...formData, type_rapport: e.target.value})}
                 className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#008D36]"
                 required
-              />
+              >
+                <option value="mensuel">Rapport mensuel</option>
+                <option value="semestriel">Rapport semestriel</option>
+                <option value="final">Rapport final</option>
+                <option value="autre">Autre</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -232,7 +261,7 @@ export default function MesRapports() {
                 type="button"
                 onClick={() => {
                   setShowUpload(false);
-                  setFormData({ titre: '', date_depot: new Date().toISOString().split('T')[0], commentaire: '', fichier: null });
+                  setFormData({ titre: '', type_rapport: 'mensuel', commentaire: '', fichier: null });
                 }}
                 className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
                 disabled={submitting}
@@ -306,6 +335,17 @@ export default function MesRapports() {
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatutColor(rapport.etat)}`}>
                       {mapEtatToStatut(rapport.etat)}
                     </span>
+                    {rapport.fichier_path && (
+                      <button
+                        onClick={() => handleDownload(rapport)}
+                        className="p-2 text-[#008D36] hover:bg-emerald-50 rounded-lg transition-colors"
+                        title="Télécharger le fichier"
+                      >
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                        </svg>
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

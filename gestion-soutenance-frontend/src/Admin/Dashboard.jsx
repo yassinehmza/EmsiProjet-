@@ -41,6 +41,41 @@ export default function Dashboard() {
     { value: juries.length, label: 'Jurys Formés' },
   ]), [etudiants.length, professeurs.length, juries.length]);
 
+  const handleExport = () => {
+    try {
+      // Create CSV content
+      const headers = ['Nom', 'Prénom', 'Email', 'Filière', 'Type Stage'];
+      const rows = etudiants.map(s => [
+        s.nom,
+        s.prenom,
+        s.email,
+        s.filiere,
+        s.type_stage
+      ]);
+      
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.join(','))
+      ].join('\n');
+      
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `etudiants_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      addToast({ type: 'success', message: 'Export réussi' });
+    } catch (error) {
+      console.error('Erreur export:', error);
+      addToast({ type: 'error', message: 'Erreur lors de l\'export' });
+    }
+  };
+
   const students = useMemo(() => etudiants.slice(0, 10), [etudiants]);
 
   return (
@@ -62,7 +97,7 @@ export default function Dashboard() {
       <div className="bg-white rounded-lg border border-gray-200">
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">Liste des étudiants</h2>
-          <Button variant="secondary">Exporter</Button>
+          <Button variant="secondary" onClick={handleExport}>Exporter</Button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">

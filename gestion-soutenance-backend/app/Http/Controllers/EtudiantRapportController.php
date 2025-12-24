@@ -6,6 +6,7 @@ use App\Models\Etudiant;
 use App\Models\Rapport;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Storage;
 
 class EtudiantRapportController extends Controller
 {
@@ -53,18 +54,58 @@ class EtudiantRapportController extends Controller
     {
         $data = $request->validate([
             'titre' => 'required|string|max:255',
-            'date_depot' => 'required|date',
+            'type_rapport' => 'nullable|string|max:100',
+            'fichier' => 'nullable|file|mimes:pdf,doc,docx|max:10240', // 10MB max
             'commentaire' => 'nullable|string',
         ]);
 
+        // Handle file upload
+        $fichierPath = null;
+        if ($request->hasFile('fichier')) {
+            $fichierPath = $request->file('fichier')->store('rapports', 'public');
+        }
+
         $rapport = Rapport::create([
             'titre' => $data['titre'],
-            'date_depot' => $data['date_depot'],
+            'type_rapport' => $data['type_rapport'] ?? 'general',
+            'date_depot' => now(),
+            'fichier_path' => $fichierPath,
             'commentaire' => $data['commentaire'] ?? null,
             'etat' => 'en_attente',
             'etudiant_id' => $etudiant->id,
         ]);
 
         return response()->json(['rapport' => $rapport], 201);
+    }
+
+    /**
+     * Download rapport file
+     */
+    public function download(Request $request, Rapport $rapport)
+    {
+        $user = $request->user();
+        
+        // Check access: etudiant owner, or professeur assigned, or admin
+        $canAccess = false;
+        if ($user instanceof Etudiant && $user->id === $rapport->etudiant_id) {
+            $canAccess = true;
+        } elseif ($user instanceof \App\Models\Professeur) {
+            $etudiant = Etudiant::find($rapport->etudiant_id);
+            if ($etudiant && ($etudiant->encadrant_id === $user->id || $etudiant->rapporteur_id === $user->id)) {
+                $canAccess = true;
+            }
+        } elseif ($user instanceof \App\Models\Administrateur) {
+            $canAccess = true;
+        }
+
+        if (!$canAccess) {
+            abort(403, 'Accès interdit');
+        }
+
+        if (!$rapport->fichier_path || !Storage::disk('public')->exists($rapport->fichier_path)) {
+            abort(404, 'Fichier non trouvé');
+        }
+
+        return Storage::disk('public')->download($rapport->fichier_path, basename($rapport->fichier_path));
     }
 }

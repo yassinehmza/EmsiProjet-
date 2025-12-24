@@ -64,7 +64,7 @@ export default function MesSoutenances() {
             </div>
           </div>
           <div className="text-3xl font-bold text-gray-900">
-            {loading ? '...' : soutenances.filter(s => new Date(s.date_soutenance) > new Date()).length}
+            {loading ? '...' : soutenances.filter(s => new Date(s.date) > new Date()).length}
           </div>
         </div>
 
@@ -78,7 +78,7 @@ export default function MesSoutenances() {
             </div>
           </div>
           <div className="text-3xl font-bold text-gray-900">
-            {loading ? '...' : soutenances.filter(s => new Date(s.date_soutenance) <= new Date()).length}
+            {loading ? '...' : soutenances.filter(s => new Date(s.date) <= new Date()).length}
           </div>
         </div>
       </div>
@@ -127,14 +127,14 @@ export default function MesSoutenances() {
                             <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
                           </svg>
                           <span className="text-gray-700">
-                            {soutenance.date_soutenance ? new Date(soutenance.date_soutenance).toLocaleDateString('fr-FR') : 'N/A'}
+                            {soutenance.date ? new Date(soutenance.date).toLocaleDateString('fr-FR') : 'N/A'}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                           <svg className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
                           </svg>
-                          <span className="text-gray-700">{soutenance.heure_soutenance || 'N/A'}</span>
+                          <span className="text-gray-700">{soutenance.heure || 'N/A'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                           <svg className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
@@ -146,13 +146,13 @@ export default function MesSoutenances() {
                     </div>
                     <div className="flex flex-col gap-2">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        new Date(soutenance.date_soutenance) > new Date() ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'
+                        new Date(soutenance.date) > new Date() ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'
                       }`}>
-                        {new Date(soutenance.date_soutenance) > new Date() ? 'À venir' : 'Passée'}
+                        {new Date(soutenance.date) > new Date() ? 'À venir' : 'Passée'}
                       </span>
-                      {soutenance.note && (
+                      {soutenance.note_finale && (
                         <div className="text-center">
-                          <span className="text-lg font-bold text-purple-600">{soutenance.note}/20</span>
+                          <span className="text-lg font-bold text-purple-600">{soutenance.note_finale}/20</span>
                         </div>
                       )}
                     </div>

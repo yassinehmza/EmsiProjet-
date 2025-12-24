@@ -11,6 +11,8 @@ import Etudiants from './Admin/Etudiants';
 import Professeurs from './Admin/Professeurs';
 import Soutenances from './Admin/Soutenances';
 import Juries from './Admin/Juries';
+import Affectations from './Admin/Affectations';
+import Planification from './Admin/Planification';
 
 // Professeur
 import ProfesseurLayout from './Professeur/ProfesseurLayout';
@@ -82,8 +84,8 @@ function App() {
           <Route path="professeurs" element={<div className="text-gray-700"><Professeurs /></div>} />
           <Route path="soutenances" element={<div className="text-gray-700"><Soutenances /></div>} />
           <Route path="juries" element={<div className="text-gray-700"><Juries /></div>} />
-          <Route path="affectations" element={<div className="text-gray-700">Affectations — à implémenter</div>} />
-          <Route path="planification" element={<div className="text-gray-700">Planification — à implémenter</div>} />
+          <Route path="affectations" element={<div className="text-gray-700"><Affectations /></div>} />
+          <Route path="planification" element={<div className="text-gray-700"><Planification /></div>} />
         </Route>
       </Routes>
     </BrowserRouter>

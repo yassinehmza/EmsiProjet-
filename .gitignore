@@ -20,3 +20,4 @@ gestion-soutenance-backend/storage/logs/*.log
 # OS
 .DS_Store
 Thumbs.db
+gestion-soutenance-frontend/package-lock.json

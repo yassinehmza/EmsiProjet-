@@ -5,6 +5,7 @@ import Modal from '../components/Modal';
 import { useAuth } from '../store/auth';
 import { useUI } from '../store/ui';
 import { getProfesseurRapports, addRemarque } from '../api/professeur';
+import { downloadRapport } from '../api/etudiant';
 
 export default function Rapports() {
   const { profile } = useAuth();
@@ -19,9 +20,10 @@ export default function Rapports() {
     setLoading(true);
     try {
       const data = await getProfesseurRapports(profile.id);
-      setReports(Array.isArray(data) ? data : (data?.data ? (Array.isArray(data.data) ? data.data : []) : []));
+      setReports(Array.isArray(data) ? data : []);
     } catch (error) {
-      addToast('Erreur lors du chargement des rapports', 'error');
+      console.error('Erreur chargement rapports:', error);
+      addToast({ type: 'error', message: 'Erreur lors du chargement des rapports' });
       setReports([]);
     } finally {
       setLoading(false);
@@ -43,6 +45,29 @@ export default function Rapports() {
     setNote(report.note || '');
     setRemarques('');
     setShowModal(true);
+  };
+
+  const handleDownload = async (rapport) => {
+    if (!rapport.fichier_path) {
+      addToast({ type: 'error', message: 'Aucun fichier disponible' });
+      return;
+    }
+    
+    try {
+      const blob = await downloadRapport(rapport.id);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `rapport_${rapport.etudiant?.nom || 'etudiant'}_${rapport.id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      addToast({ type: 'success', message: 'Téléchargement réussi' });
+    } catch (error) {
+      console.error('Erreur téléchargement:', error);
+      addToast({ type: 'error', message: 'Erreur lors du téléchargement' });
+    }
   };
 
   const handleSubmitValidation = async () => {
@@ -149,7 +174,12 @@ export default function Rapports() {
       label: 'Actions',
       render: (row) => (
         <div className="flex items-center gap-2">
-          <button className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Télécharger">
+          <button 
+            onClick={() => handleDownload(row)}
+            className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" 
+            title="Télécharger"
+            disabled={!row.fichier_path}
+          >
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>

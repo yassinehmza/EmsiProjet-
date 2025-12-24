@@ -34,6 +34,7 @@ Route::post('/auth/admin/login', [AuthController::class, 'loginAdministrateur'])
 // Rapports étudiants (dépôt + liste)
 Route::post('/etudiants/{etudiant}/rapports', [EtudiantRapportController::class, 'store']);
 Route::middleware('auth:sanctum')->get('/etudiants/{etudiant}/rapports', [EtudiantRapportController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/rapports/{rapport}/download', [EtudiantRapportController::class, 'download']);
 // Soutenance de l'étudiant (consultation)
 Route::middleware('auth:sanctum')->get('/etudiants/{etudiant}/soutenance', [EtudiantSoutenanceController::class, 'show']);
 
@@ -58,6 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rapports visibles par un professeur (étudiants assignés)
     Route::get('/professeurs/{professeur}/rapports', [ProfesseurRapportController::class, 'index']);
+    Route::get('/professeurs/{professeur}/etudiants', [ProfesseurRapportController::class, 'getEtudiants']);
     // Soutenances où le professeur est membre du jury
     Route::get('/professeurs/{professeur}/soutenances', [ProfesseurSoutenanceController::class, 'index']);
 
